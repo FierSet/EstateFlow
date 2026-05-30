@@ -1,0 +1,33 @@
+index,English,Spanish
+0,EstateFlow,EstateFlow
+1,Home,Home
+2,Privacy,Privacidad
+3,Sign In,Iniciar
+4,Sign Up,Crear cuenta
+5,Username,Usuario
+6,Password,Constraseña
+7,Keep me Signed in,Mantener secion
+8,Repeat Password,Reingresa la contraseña
+9,Forgot Password?,Olvide la contraseña
+10,Already Member?,Cuento con cuenta
+11,Email,Email
+12,this is a beta version all information is for demonstration purposes only  we do not collect any data from our users if you have any questions or concerns about our privacy policy contact to the dev,Este es una vercion veta. toda informacion solo es demostrativa. nosotros no colectamos informacion de los usuarios. si tienes duda contacta con el desarrollador.
+13,Privacy Policy,Politicas de Privacidad
+14,Password don't match,Las contraseñas no coinciden
+15,Email format not valid,formato de email no valido
+16,Email or Password Empty,Email o Password vacio
+17,User already exist,El usuario ya existe
+18,Can't create user,No se pudo crear el usuario
+19,User Created,Usuario creado
+20,User dont exist,El usuario no existe
+21,baned user,Usuario bloqueado
+22,Loggin success,Inicio exitoso
+23,User or Password is incorrect,Usuario o contraseña incorrectos
+24,My Portal,Mi Portal
+25,Profile,Perfil
+26,Dashboard,Panel
+27,My Properties,Mis Propiedades
+28,Payments,Pagos
+29,Maintenance,Mantenimiento
+30,Settings,Ajustes
+31,Logout,Salir

@@ -1,0 +1,173 @@
+@{
+    ViewData["Title"] = "Customer";
+}
+
+<header class="header_customer" id="header_customer">
+
+    <div class="config-pref">
+        <div class="database-conection-test" id ="database-conection-test" onclick="testDatabaseConnection('database-conection-test')"> </div>
+
+        <input id="inputtextlanguage" class="LanguageInput" type="text" name="language" list='languageSelect' placeholder="Select or type language">
+        <datalist class="datalist" id="languageSelect">
+        </datalist> 
+
+        <label class="switch" ID="darkModeToggle">
+            <input type="checkbox" checked onclick="darkMode()">
+            <span class="slider round"></span>
+        </label>
+    </div>
+
+</header>
+
+<div class="customer-container">
+
+
+    <div class="sidebar" id="sidebar">
+        <div class="My-Portal" id="My-Portal"></div>
+
+        <div class="profile-card">
+            <img src="https://i.pravatar.cc/120" alt="User">
+            <h3>Emily Johnson</h3>
+        </div>
+
+        <div class="customer-listsinterface-container">
+            <ul class="customer-interfacelist" id="customer-interfacelist"> 
+            </ul>
+        </div>
+        <div class="logout-container">
+            <label id="Logout"></label><button class="logout-btn" onclick="location.href='@Url.Action("Index", "Home")'"><i class="fa fa-sign-out"></i></button>
+        </div>
+    </div>
+    <button class="hamburger-button" id="hamburger-button"><i class="fa-solid fa-bars"></i></button>
+    
+
+    <div class="customer-rigth-zone" id="customer-rigth-zone"></div>
+
+    
+
+</div>
+
+@section Scripts {
+<script>
+
+    loadstart();
+    loadlist();
+    testDatabaseConnection('database-conection-test');
+
+    loadpartialbyinteface("Profile");
+
+    const hamburger = document.getElementById('hamburger-button');
+    const sidebar = document.getElementById('sidebar');
+
+    function loadlist()
+    {
+
+        var listbase = document.getElementById('customer-interfacelist');
+
+
+        var listdeployment = [
+            ['Profile', '<i class="fa-regular fa-address-book"></i>'],
+            ['Dashboard', '<i class="fa-solid fa-gauge"></i>'],
+            ['My-Properties', '<i class="fa-solid fa-house"></i>'],
+            ['Payments', '<i class="fa-solid fa-file-contract"></i>'],
+            ['Maintenance', '<i class="fa-solid fa-wrench"></i>'],
+            ['Settings', '<i class="fa-solid fa-gear"></i>']
+        ];
+
+        listdeployment.map(element => {
+            listbase.innerHTML += `<li class="elementlist" id='${element[0]}-li'> 
+                    ${element[1]} 
+                    <a id='${element[0].replace("-li", "")}'></a> 
+                </li>`;
+        });
+        getindexlabel(
+            [
+            'My-Portal',
+            'Profile',
+            'Dashboard',
+            'My-Properties',
+            'Payments',
+            'Maintenance',
+            'Settings',
+            'Logout'
+            ]);
+    }
+
+    function loadpartialbyinteface(partialcall)
+    {
+        var parent = document.getElementById('customer-interfacelist');
+        
+        Array.from(parent.children)
+            .map(child => {
+                
+                //console.log(child);
+                if(child.id.replace("-li", "") == partialcall)
+                {
+                    child.classList.remove('Inactive');
+                    child.classList.add('active');
+                    child.removeAttribute("onclick");
+                    loadpartial(`/Customer/ChangePartial?PartialName`, `./partial/${child.id.replace("-li", "")}`, "customer-rigth-zone")
+                }
+                else
+                {
+                    child.classList.remove('active');
+                    child.classList.add('inactive');
+                    child.setAttribute("onclick", `loadpartialbyinteface('${child.id.replace("-li", "")}')`);
+                }
+            });
+    }
+
+    function loadpartial(partialfunc, partialPath, idtarget)
+    {
+        Loadcreen(idtarget);
+
+        ChangeSinglePartial(partialfunc, partialPath, idtarget)
+        .then(() => { // After the partial is loaded, set up the labels for the login/signup form
+            
+            if(document.getElementById('loginform')) // Check if the sign-in label exists to determine if the login/signup partial is loaded
+            {
+                getindexlabel();
+                getvaluelabel();
+            }
+            else if(document.getElementById('privacytitle'))
+            {
+                    getindexlabel(
+                    [
+                    'privacytitle',
+                    'beta-version'
+                    ]
+                    );
+
+            }
+            else getindexlabel();
+            
+        });
+
+    }
+
+     const observer = new MutationObserver((mutations) => { // Observe changes to the data-language attribute
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-language') {
+                const newLanguage = document.documentElement.getAttribute('data-language');
+                
+                // Execute your code here when language changes
+                
+                getindexlabel()
+            }
+
+        });
+    });
+
+    observer.observe(document.documentElement, { // Start observing the root element for attribute changes
+        attributes: true,
+        attributeFilter: ['data-language']
+    });
+
+
+    hamburger.addEventListener('click', () => {
+        sidebar.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+    
+</script>
+}

@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" id="hometitle"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link link-colore" onclick = 'loadpartial(`/Home/ChangePartial?PartialName`, "./login_singup/login", "partialContainer")' id="homeLink"></a>
+                        <!--<a class="nav-link link-colore" asp-area="" asp-controller="Home" asp-action="Index">Home</a> -->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-colore"  onclick = 'loadpartial(`/Home/ChangePartial?PartialName`, "./privacy", "partialContainer")' id="privacyLink"></a>
+                        <!--<a class="nav-link link-colore" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="database-conection-test" id ="database-conection-test" onclick="testDatabaseConnection('database-conection-test')"> </div>
+
+        <div class="config-pref">
+
+            <input id="inputtextlanguage" class="LanguageInput" type="text" name="language" list='languageSelect' placeholder="Select or type language">
+            <datalist class="datalist" id="languageSelect">
+            </datalist> 
+
+            <label class="switch" ID="darkModeToggle">
+                <input type="checkbox" checked onclick="darkMode()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+    </nav>
+</header>
+
+<main role="main">
+
+<div class="login-container" id="partialContainer">
+    <!-- <partial name="./login_singup/login" /> -->
+</div>
+
+    
+</main>
+
+<footer class="custome-footer">
+    <div class="container">
+        &copy; 2026 - <a id="hometitlefooter"></a> - <a onclick = 'loadpartial(`/Home/ChangePartial?PartialName`, "./privacy", "partialContainer")'>Privacy</a>
+        <a class="nav-link link-colore" asp-area="" asp-controller="Customer" asp-action="Customer">Home</a>
+    </div>
+</footer>
+
+
+@section Scripts {
+    <script>
+
+        loadpartial(`/Home/ChangePartial?PartialName`, "./login_singup/login", "partialContainer")
+        testDatabaseConnection('database-conection-test');
+        loadstart();
+
+        function loadpartial(partialfunc, partialPath, idtarget)
+        {
+
+            ChangeSinglePartial(partialfunc, partialPath, idtarget)
+            .then(() => { // After the partial is loaded, set up the labels for the login/signup form
+                if(document.getElementById('loginform')) // Check if the sign-in label exists to determine if the login/signup partial is loaded
+                {
+                    getindexlabel();
+                    getvaluelabel();
+                }
+                else if(document.getElementById('privacytitle'))
+                {
+                     getindexlabel(
+                        [
+                        'privacytitle',
+                        'beta-version'
+                        ]
+                        );
+
+                }
+            });
+
+        }
+
+        getvaluelabel(
+            [
+                'hometitle',
+                'hometitlefooter',
+                'homeLink',
+                'privacyLink'
+            ]
+        );
+        
+
+        const observer = new MutationObserver((mutations) => { // Observe changes to the data-language attribute
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-language') {
+                    const newLanguage = document.documentElement.getAttribute('data-language');
+                    
+                    // Execute your code here when language changes
+                    
+                    getindexlabel(
+                        [
+                            'hometitle',
+                            'hometitlefooter',
+                            'homeLink',
+                            'privacyLink'
+                        ]
+                    );
+
+                    if(document.getElementById('loginform')) // Check if the sign-in label exists to determine if the login/signup partial is loaded
+                    {
+                        getindexlabel();
+                        getvaluelabel();
+                    }
+                    else if(document.getElementById('privacytitle'))
+                        getindexlabel(
+                            [
+                                'privacytitle',
+                                'beta-version'
+                            ]
+                        );
+                    
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, { // Start observing the root element for attribute changes
+            attributes: true,
+            attributeFilter: ['data-language']
+        });
+
+        // Initial label setup
+
+    </script>
+}

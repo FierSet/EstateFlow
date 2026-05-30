@@ -1,0 +1,221 @@
+:root {
+  /* Light theme */
+    --sidebar-bacground : rgb(83, 83, 156);
+    --textcolorbase : black;
+}
+
+[data-theme="dark"] {
+    --sidebar-bacground : rgb(25, 25, 53);
+    --textcolorbase : white;
+    --sidebar-menu-width: 20%;
+}
+
+.customer-container
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.header_customer
+{
+    display: flex;
+    justify-content: end;
+}
+
+#loadingScreen
+{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.spinner {
+    width: 10rem;
+    height: 10rem;
+    border: 5px solid #ddd;
+    border-top: 5px solid #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#sidebar {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    left: 0;
+    top: 0;
+    width: 20%;
+    height: 100%;
+    padding: 2% 1% 0 1%;
+    z-index: 1;
+    gap: 1%;
+
+    background-color: var(--sidebar-bacground);
+    color: var(--textcolorbase);
+
+    transform: translateX(-95%);
+    transition: transform 0.3s ease;
+}
+
+#sidebar.active {
+    transform: translateX(0);
+}
+
+
+#hamburger-button {
+    position: fixed;
+    width: 5%;
+    height: 5%;
+    left: 1%;
+    top: 0;
+    z-index: 1;
+    border: none;
+    border-radius: 0 12px 12px 0;
+
+    background-color: var(--sidebar-bacground);
+    color: var(--textcolorbase);
+    cursor: pointer;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateX(-40%);
+    transition: transform 0.6s ease;
+}
+
+#hamburger-button.active
+{
+    left: var(--sidebar-menu-width);
+    top: 0;
+    transform: translateX(0);
+}
+
+@media (max-width: 980px) {
+
+    #sidebar{
+        width: calc(var(--sidebar-menu-width) + 10%);
+    }
+
+    #hamburger-button.active
+    {
+        left: calc(var(--sidebar-menu-width) + 10%);
+    }
+
+}
+
+@media (max-width: 552px) {
+
+    #sidebar{
+        width: calc(var(--sidebar-menu-width) + 30%);
+    }
+
+    #hamburger-button.active
+    {
+        left: calc(var(--sidebar-menu-width) + 30%);
+    }
+
+}
+
+.logout-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    margin-top: auto;
+    padding-bottom: 5%;
+}
+
+.logout-btn 
+{
+    display: flex;
+    flex-direction: row;
+
+    gap: 1%;
+    font-size: 110%;
+    border: none;
+    background-color: var(--sidebar-bacground);
+    color: var(--textcolorbase);
+    
+}
+
+.profile-card
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2%;
+}
+
+.customer-interfacelist
+{
+    list-style-type: none;
+    font-size: 120%;
+    padding: 1rem;
+}
+
+.customer-interfacelist > .elementlist
+{
+    margin-top: 20%;
+}
+
+.customer-interfacelist > .elementlist.active
+{
+    font-weight: bold;
+}
+
+.customer-interfacelist > .elementlist.inactive
+{
+    cursor: pointer;
+}
+
+.customer-listsinterface-container
+{
+    width: 100%;
+}
+
+.customer-rigth-zone
+{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile
+{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 20%;
+}
+
+.userdata
+{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+}
+
+.group
+{
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    margin-bottom: 1%;
+    gap: 5px;
+}
