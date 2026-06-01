@@ -71,44 +71,37 @@ public class DatabaseController : ControllerBase
 
             var response = await command.ExecuteScalarAsync();
             await connection.CloseAsync();
-
-            string? result = response != DBNull.Value ? response?.ToString() : "{}";
-
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            if (!result.StartsWith('['))
-                throw new Exception("json incorrect");
             
-                var jsonarray = JsonNode.Parse(result)?.AsArray();
+            string? result = response != DBNull.Value ? response?.ToString() : "{}";
+            
+            if (result != null && result.StartsWith('['))
+            {
+                var jsonarr = JsonNode.Parse(result).AsArray();
+
+                var jsonarray = jsonarr.FirstOrDefault();
                 var matchpassword = passwordHasher.VerifyHashedPassword(
                         new IdentityUser(),
-                        jsonarray[0]["PasswordHash"].ToString(),
+                        jsonarray?["PasswordHash"]?.ToString() ?? "",
                         user.Password ?? string.Empty
                 );
 
                 if(matchpassword == PasswordVerificationResult.Success)
                 {
-                    HttpContext.Session.SetString(
-                        "UserEmail",
-                        user.Email!
-                    );
-                    HttpContext.Session.SetString(
-                        "UserID",
-                        jsonarray[0]["UserID"].ToString()
-                    );
-
-                    /* read session
-                        string? Email =
-                        HttpContext.Session.GetString(
-                            "UserEmail"
-                        );
-                    */
-                    result = "{\"code\":22,\"message\":\"Loggin success\"}";
+                    var results = new
+                    {
+                        code = 22,
+                        message = "Login success",
+                        UserID = jsonarray?["UserID"],
+                        Email = jsonarray?["Email"],
+                        IsActive = jsonarray?["IsActive"],
+                        Role = jsonarray?["Role"]
+                    };
+                    string resultjson = JsonSerializer.Serialize(results);
+                    result = resultjson.ToString();
                 }
                 else
                     result = "{\"code\":23,\"message\":\"User or Password is incorrect\"}";
-                    
-            
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }   
             
             return Ok(new {Status = 200, jsonresponse = result }); //result });
         }
@@ -124,37 +117,6 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            //var passwordHasher = new PasswordHasher<IdentityUser>();
-
-            var storeprocedure = "Singup";
-            var connection = _context.Database.GetDbConnection();
-
-            if (connection.State == ConnectionState.Closed)
-                await connection.OpenAsync();
-            
-            var command = connection.CreateCommand();
-            command.CommandText = storeprocedure;
-            command.CommandType = CommandType.StoredProcedure;
-            //command.Parameters.Add(new SqlParameter("@json", tojson));
-
-            var response = await command.ExecuteScalarAsync();
-            string? result = response != DBNull.Value ? response?.ToString() : "{}";
-            
-            return Ok(new {Status = 200, jsonresponse = result });
-        }
-        catch (Exception ex)
-        {
-            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
-        }
-    }
-
-    [HttpPost("Getdatauser")]
-    public async Task<IActionResult> Getdatauser([FromBody] Usersingin user)
-    {
-        try
-        {
-            //var passwordHasher = new PasswordHasher<IdentityUser>();
-
             var passwordHasher = new PasswordHasher<IdentityUser>();
             string haspassword = 
                 passwordHasher.HashPassword(
@@ -179,6 +141,36 @@ public class DatabaseController : ControllerBase
             command.CommandText = storeprocedure;
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@json", tojson));
+
+            var response = await command.ExecuteScalarAsync();
+            string? result = response != DBNull.Value ? response?.ToString() : "{}";
+            
+            return Ok(new {Status = 200, jsonresponse = result });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+    }
+
+    [HttpPost("Getdatauser")]
+    public async Task<IActionResult> Getdatauser([FromBody] Usersingin user)
+    {
+        try
+        {
+
+            string tojson = JsonSerializer.Serialize(user);
+
+            var storeprocedure = "Singup";
+            var connection = _context.Database.GetDbConnection();
+
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+            
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            //command.Parameters.Add(new SqlParameter("@json", tojson));
 
             var response = await command.ExecuteScalarAsync();
             string? result = response != DBNull.Value ? response?.ToString() : "{}";

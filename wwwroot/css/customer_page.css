@@ -211,7 +211,7 @@
     justify-content: start;
 }
 
-.group
+.group-userinfo
 {
     display: flex;
     flex-direction: row;

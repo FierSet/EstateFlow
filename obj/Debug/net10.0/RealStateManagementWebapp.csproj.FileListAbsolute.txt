@@ -965,14 +965,11 @@ C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\rjsmcshtml
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\scopedcss\bundle\RealStateManagementWebapp.styles.css
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\scopedcss\projectbundle\RealStateManagementWebapp.bundle.scp.css
-C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\y8zljcw5l3-{0}-xv1h7cp8im-xv1h7cp8im.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\luf1k4di59-{0}-krhdzcyxea-krhdzcyxea.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\hb2rsrdyf4-{0}-pepkvuxgt0-pepkvuxgt0.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\mn4r2s125j-{0}-o8czprx8i7-o8czprx8i7.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\vlnnbqrxz9-{0}-61n19gt1b8-61n19gt1b8.gz
-C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\fjei0nu7qp-{0}-srn8p83aay-srn8p83aay.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\ajfrnasl9w-{0}-3pyu13to4t-3pyu13to4t.gz
-C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\7ycuvkyua6-{0}-1i2pzrh7h3-1i2pzrh7h3.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\l6r5b4ttyq-{0}-bqjiyaj88i-bqjiyaj88i.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\vzlh0bk2u7-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\adtpmiuikr-{0}-erw9l3u2r3-erw9l3u2r3.gz
@@ -1046,3 +1043,7 @@ C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\refint\Rea
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\RealStateManagementWebapp.pdb
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\RealStateManagementWebapp.genruntimeconfig.cache
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\ref\RealStateManagementWebapp.dll
+C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\RealStateManagementWebapp.sourcelink.json
+C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\7ycuvkyua6-{0}-1i2pzrh7h3-1i2pzrh7h3.gz
+C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\y8zljcw5l3-{0}-wtvj1tebxk-wtvj1tebxk.gz
+C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\fjei0nu7qp-{0}-y0qn9yreyh-y0qn9yreyh.gz

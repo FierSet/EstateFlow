@@ -1,9 +1,4 @@
-using System.Diagnostics;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.Configuration;
-using RealStateManagementWebapp.Models;
 
 namespace RealStateManagementWebapp.Controllers;
 

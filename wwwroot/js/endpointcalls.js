@@ -52,7 +52,7 @@ async function signin(idemail, idpassword, iderror)
         return 0;
     }
 
-    const response = await fetch('/api/Database/Signin', {
+    const response = await fetch('/Home/Loggin', { //'/api/Database/Signin'
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Email: Email.value, Password: Password.value })
@@ -71,7 +71,8 @@ async function signin(idemail, idpassword, iderror)
     {
         errorlend.innerHTML += `<p id='singin-message-error' style='color:green; !important'> </p>`;
         indexlabel['singin-message-error'] = jsoncodes.code;
-        getindexlabel(['singin-message-error']);
+        window.location = '/Customer/Customer';
+        //getindexlabel(['singin-message-error']);
     }
 
 }
@@ -113,7 +114,7 @@ async function signup(email, password1, password2, error)
         return 0;
     }
 
-    const response = await fetch('/api/Database/Signup', {
+    const response = await fetch('/Home/Signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ Email: Email.value, Password: Password.value })
