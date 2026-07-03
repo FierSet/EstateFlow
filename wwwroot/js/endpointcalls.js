@@ -1,8 +1,8 @@
-function testDatabaseConnection(deploy_in) 
+async function testDatabaseConnection(deploy_in, iderror) 
 {
     const resultElement = document.getElementById(deploy_in);
-    
-    resultElement.innerHTML = '<a class="orange-dot"></a>';
+    resultElement.textContent = 'DB';
+    resultElement.innerHTML += '<a class="orange-dot"></a>';
 
     fetch('/api/Database/test-connection')
         .then(response => response.json())
@@ -26,10 +26,11 @@ function testDatabaseConnection(deploy_in)
 }
 
 async function signin(idemail, idpassword, iderror)
-{
+{   
+    
     var Email = document.getElementById(idemail);
     var Password = document.getElementById(idpassword);
-    var errorlend = document.getElementById('error-signin');
+    var errorlend = document.getElementById(iderror);
 
     var errorMessage = errorlend.querySelector('#singin-message-error');
 
@@ -48,33 +49,51 @@ async function signin(idemail, idpassword, iderror)
         Email.classList.add('border-red');
         indexlabel['singin-message-error'] = 15;
         getindexlabel(['singin-message-error']);
-        
         return 0;
     }
 
-    const response = await fetch('/Home/Loggin', { //'/api/Database/Signin'
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Email: Email.value, Password: Password.value })
-    });
-
-    var jsonresponse = await response.json();
-    var jsoncodes = JSON.parse(jsonresponse.jsonresponse);
-    
-    if(errorcode.includes(jsoncodes.code))
+    Loadcreen('screenload');
+    try 
     {
-        errorlend.innerHTML += `<p id='singin-message-error'> </p>`;
-        indexlabel['singin-message-error'] = jsoncodes.code;
+        const response = await fetch('/Home/Loggin', { //'/api/Database/Signin'
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Email: Email.value, Password: Password.value })
+        })
+        .then(response => response.json())
+        .then(data => {
+            
+             if (data.status !== 200)
+                throw new Error("Conection error")
+            return data;
+        });
+        
+        var jsoncodes = JSON.parse(response.jsonresponse);
+        
+        if(errorcode.includes(jsoncodes.code))
+        {
+            errorlend.innerHTML += `<p id='singin-message-error'> </p>`;
+            indexlabel['singin-message-error'] = jsoncodes.code;
+            getindexlabel(['singin-message-error']);
+        }
+        else
+        {
+            errorlend.innerHTML += `<p id='singin-message-error' style='color:green; !important'> </p>`;
+            indexlabel['singin-message-error'] = jsoncodes.code;
+            window.location = './Customer/';
+            //getindexlabel(['singin-message-error']);
+        }
+
+    } 
+    catch(er)
+    {
+        console.log(er);
+        errorlend.innerHTML += `<p id='singin-message-error'> </p>`
+        indexlabel['singin-message-error'] = 45;
         getindexlabel(['singin-message-error']);
+        
     }
-    else
-    {
-        errorlend.innerHTML += `<p id='singin-message-error' style='color:green; !important'> </p>`;
-        indexlabel['singin-message-error'] = jsoncodes.code;
-        window.location = '/Customer/Customer';
-        //getindexlabel(['singin-message-error']);
-    }
-
+    finally{Loadcreen('screenload');}
 }
 
 async function signup(email, password1, password2, error)
@@ -114,32 +133,46 @@ async function signup(email, password1, password2, error)
         return 0;
     }
 
-    const response = await fetch('/Home/Signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Email: Email.value, Password: Password.value })
-    });
+    Loadcreen('screenload');
+    try 
+    {
+        const response = await fetch('/Home/Signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Email: Email.value, Password: Password.value })
+        }).then(response => response.json())
+        .then(data =>{
+             if (data.status !== 200)
+                throw new Error("Conection error")
+            return data;
+        });
 
-    var jsonresponse = await response.json();
-    var jsoncodes = JSON.parse(jsonresponse.jsonresponse);
-    
-    if(errorcode.includes(jsoncodes.code))
+        var jsoncodes = JSON.parse(response.jsonresponse);
+        
+        if(errorcode.includes(jsoncodes.code))
+        {
+            errorlend.innerHTML += `<p id='singun-message-error'> </p>`;
+            indexlabel['singun-message-error'] = jsoncodes.code;
+            getindexlabel(['singun-message-error']);
+        }
+        else
+        {
+            errorlend.innerHTML += `<p id='singun-message-error' style='color:green; !important'> </p>`;
+            indexlabel['singun-message-error'] = jsoncodes.code;
+            getindexlabel(['singun-message-error']);
+            var Email = document.getElementById(email).value = "";
+            var Password = document.getElementById(password1).value = "";
+            var Password2 = document.getElementById(password2).value = "";
+        }
+    }
+    catch(err)
     {
         errorlend.innerHTML += `<p id='singun-message-error'> </p>`;
-        indexlabel['singun-message-error'] = jsoncodes.code;
+        indexlabel['singun-message-error'] = 45;
         getindexlabel(['singun-message-error']);
-        return 0;
     }
-    else
+    finally
     {
-        errorlend.innerHTML += `<p id='singun-message-error' style='color:green; !important'> </p>`;
-        indexlabel['singun-message-error'] = jsoncodes.code;
-        getindexlabel(['singun-message-error']);
-        var Email = document.getElementById(email).value = "";
-        var Password = document.getElementById(password1).value = "";
-        var Password2 = document.getElementById(password2).value = "";
-        return 0;
+        Loadcreen('screenload');
     }
-
-
 }

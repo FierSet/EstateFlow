@@ -2,12 +2,15 @@
   /* Light theme */
     --sidebar-bacground : rgb(83, 83, 156);
     --textcolorbase : black;
+    --sidebar-menu-width: 20%;
+    --color-button-custommer: #2a5ff0;
 }
 
 [data-theme="dark"] {
     --sidebar-bacground : rgb(25, 25, 53);
     --textcolorbase : white;
     --sidebar-menu-width: 20%;
+    --color-button-custommer: #022ea7;
 }
 
 .customer-container
@@ -155,7 +158,15 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    width: 200px;
+    height: 200px;
     gap: 2%;
+}
+
+.profile-card img
+{
+    width: 80%;
+    height: 80%;
 }
 
 .customer-interfacelist
@@ -195,12 +206,103 @@
     align-items: center;
 }
 
+
 .profile
 {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    height: max-content;
+    width: 80%;
+   
+}
+
+.userdataform, .tax-data, .userpassword
+{
+    display: flex;
+    border-radius: 10px;
+    padding: 1rem;
+    border: solid 1px black;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.group-userinfo
+{
+    display: flex;
+    align-items: center;
+    justify-content:end;
+    margin-top: 1%;
+    gap: 5px;
+    width: 60%;
+}
+
+.group-userinfo label
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: end;
+    font-size: 100%;
+}
+
+.group-userinfo input[type=text], 
+.userpassword input[type=Password]
+{
     width: 50%;
-    gap: 20%;
+    margin: 10px 0;
+    box-sizing: border-box;
+    color: var(--textcolorbase);
+    border: none;
+    background-color: rgba(255, 255, 255, 0.212);
+    border-bottom: 1px solid rgb(38, 0, 255);
+}
+
+.input-validation-error
+{
+  border-bottom: 1px solid rgb(255, 0, 0) !important;
+}
+
+.customercode
+{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#customercode
+{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.closebutton-custommer
+{
+    background-color: #022ea700;
+    border: 0;
+    color: white;
+}
+
+.background-red { background-color: red; }
+.background-orange { background-color: orange; }
+.background-greend {background-color: green;}
+
+.group-userinfo input[type=submit], 
+.userpassword input[type=submit]
+{
+    display: inline-block;
+    background-color: var(--color-button-custommer);
+    border: none;
+    color: var(--textcolorbase);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .userdata
@@ -209,13 +311,4 @@
     flex-direction: column;
     align-items: start;
     justify-content: start;
-}
-
-.group-userinfo
-{
-    display: flex;
-    flex-direction: row;
-    align-items: start;
-    margin-bottom: 1%;
-    gap: 5px;
 }

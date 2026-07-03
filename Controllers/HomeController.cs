@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RealStateManagementWebapp.Models;
 using System.Text.Json.Nodes;
@@ -34,39 +33,21 @@ public class HomeController : Controller
         );
         string result = await response.Content.ReadAsStringAsync();
 
-         var json = JsonNode.Parse(result);
-
-        var userjson = JsonNode.Parse(json["jsonresponse"].ToString());
+        var json = JsonNode.Parse(result);
+       
+        var userjson = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
 
         if (userjson?["code"]?.ToString() == "22")
             if (userjson?["UserID"] != null)
             {
-                HttpContext.Session.SetString(
-                    "ID",
-                    userjson?["UserID"]?.ToString() ?? ""
-                );
-                HttpContext.Session.SetString(
-                    "Email",
-                    userjson?["Email"]?.ToString() ?? ""
-                );
-
-                HttpContext.Session.SetString(
-                    "IsActive",
-                    userjson?["IsActive"]?.ToString() ?? "0"
-                );
-
-                HttpContext.Session.SetString(
-                    "Role",
-                    userjson?["Role"]?.ToString() ?? "1"
-                );
+                HttpContext.Session.SetString("ID", userjson?["UserID"]?.ToString() ?? "");
+                HttpContext.Session.SetString("Email", userjson?["Email"]?.ToString() ?? "");
+                HttpContext.Session.SetString("IsActive", userjson?["IsActive"]?.ToString() ?? "0");
+                HttpContext.Session.SetString("Role", userjson?["Role"]?.ToString() ?? "1");
+                HttpContext.Session.SetString("FirstName", userjson?["FirstName"]?.ToString() ?? "Leon");
+                HttpContext.Session.SetString("FathersName", userjson?["FathersName"]?.ToString() ?? "Scot");
+                HttpContext.Session.SetString("AvatarImage", userjson?["AvatarImage"]?.ToString() ?? "https://i.pravatar.cc/120");
             }
-
-        /*
-        string? Email =
-        HttpContext.Session.GetString(
-            "Email"
-            );
-        */
         return Content(json!.ToString());
     }
 

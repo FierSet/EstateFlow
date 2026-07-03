@@ -11,11 +11,11 @@ var indexlabel = {
     'privacyLink': 2,
     'sign-in-label': 3,
     'sign-up-label': 4,
-    'username-login': 5,
+    'username-login': 11,
     'password-login': 6,
     'keep-signed-in': 7,
     'forgot-password-link': 9,
-    'username-signup': 5,
+    'username-signup': 11,
     'password-signup': 6,
     'repeat-password-signup': 8,
     'already-member-label': 10,
@@ -30,12 +30,79 @@ var indexlabel = {
     'Payments': 28,
     'Maintenance': 29,
     'Settings': 30,
-    'Logout': 31
+    'Logout': 31,
+    
+    'FirstNamelabel': 33,
+    'SecondNamelabel' : 34,
+    'FathersNamelabel' : 35,
+    'MothersNamelabel' : 36,
+    'Phonelabel' : 37,
+    'Emaillabel' : 11,
+    'profileh1': 25,
+
+    'TaxDatah2': 44,
+
+    'Changepasswordlabel': 39,
+    'OldPassworlabel': 40,
+    'Password1label': 41,
+    'Password2label': 42,
+
+    'FirstNameerror': 46,
+    'SecondNameerror': 47,
+    'FathersNameerror': 48,
+    'MothersNameerror':49,
+    'Emailerror': 50,
+    'Phoneerror':51,
+    'Passworderror': 53,
+    'Password1error': 53,
+    'Password2error': 53,
+    
+    'Titlelabel': 58,
+    'Descriptionlabel': 59,
+    'Addresslabel': 60,
+    'Citylabel': 61,
+    'Statelabel': 62,
+    'ZipCodelabel': 63,
+    'Pricelabel': 64,
+    'PropertyTypelabel': 65,
+    'AREAlabel': 66,
+    'Statuslabel': 67,
+    'RentPricelabel': 68,
+    'SalePricelabel': 69,
+    'Imageurllabel': 70,
+    'properties-title': 71,
+    'PropertyType-1': 72,
+    'PropertyType-2': 73,
+    'PropertyType-3': 74,
+    'PropertyType-4': 75,
+    'STATUS-1': 76,
+    'STATUS-2': 77,
+    'STATUS-3': 78,
+    'STATUS-4': 79,
+    'STATUS-5': 80,
+    'propertyTitlelabel': 81,
+    'Update-property': 38,
+    'btnAddRoom': 82,
+    'Countrylabel':97,
+
+    'RoomType-1-0': 86,
+    'RoomType-2-0': 87,
+    'RoomType-3-0': 88,
+    'RoomType-4-0': 89,
+    'RoomType-5-0': 90,
+    'RoomType-6-0': 91,
+    'RoomType-7-0': 92,
+    'RoomType-8-0': 93,
+    'total-rowslabel': 98
+    
 }
 
 var valuearray = {
     'sign-in-button': 3,
-    'sign-up-button': 4
+    'sign-up-button': 4,
+
+    'Update-basic-data': 38,
+    'Update-password': 43
 }
 
 function getFlagCountry(lang) {
@@ -99,7 +166,6 @@ async function Loadcoments(cvsPath)
                 return cols[index] ? cols[index].trim() : "";
             });
         });
-
         return comment;
     } 
     catch (error) 
@@ -108,7 +174,6 @@ async function Loadcoments(cvsPath)
     }
 
 }
-
 
 (async () => 
 {
@@ -139,7 +204,7 @@ async function getindexlabel(IDList = null)
 
     const setText = (id, text) => {
         const element = document.getElementById(id);
-        if (element) element.textContent = text;
+        if (element){ element.textContent = text;}
     };
 
     if(!IDList)
@@ -167,54 +232,3 @@ async function getvaluelabel(IDList = null)
     else
         IDList.forEach(id => setTextInputValue(id, languagearray[language][valuearray[id]]))
 }
-/*
-
-function addlabels(defaultLanguage)
-{
-    if (!languagearray || !languagearray[defaultLanguage]) {
-        console.warn('Language data not available for', defaultLanguage);
-        return;
-    }
-
-    // Helper to safely set textContent
-    const setText = (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = text;
-    };
-
-    const setTextInputValue = (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.value = text;
-    }
-
-
-    var labelmatrix_textContent = [
-        ['hometitle', 0],
-        ['hometitlefooter', 0],
-        ['homeLink', 1],
-        ['privacyLink', 2],
-
-        ['sign-in-label', 3],
-        ['sign-up-label', 4],
-        ['username-login', 5],
-        ['password-login', 6],
-        ['keep-signed-in', 7],
-        ['forgot-password-link', 9],
-        ['username-signup', 5],
-        ['password-signup', 6],
-        ['repeat-password-signup', 8],
-        ['email-address', 11],
-        ['already-member-label', 10]
-    ];
-
-    var labelmatrix_inputValue = [
-        ['sign-in-button', 3],
-        ['sign-up-button', 4]
-    ];
-
-
-    labelmatrix_textContent.forEach(([id, index]) => setText(id, languagearray[defaultLanguage][index]));
-    labelmatrix_inputValue.forEach(([id, index]) => setTextInputValue(id, languagearray[defaultLanguage][index]));
-}
-
-*/

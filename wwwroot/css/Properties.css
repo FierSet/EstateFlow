@@ -1,0 +1,348 @@
+:root {
+  /* Light theme */
+    --sidebar-bacground : rgb(83, 83, 156);
+    --textcolorbase : black;
+    --sidebar-menu-width: 20%;
+    --color-button-custommer: #2a5ff0;
+    --background-option : white;
+}
+
+[data-theme="dark"] {
+    --sidebar-bacground : rgb(25, 25, 53);
+    --textcolorbase : white;
+    --sidebar-menu-width: 20%;
+    --color-button-custommer: #022ea7;
+    --background-option : darkgray;
+    --background-sections: #272b42;
+    --bacgroind-room: 145deg,#2c2f46,#23263b;
+    --scrollbar-background-track: #22253b;
+    --scrollbar-background-thumb: #50567f;
+    --scrollbar-background-hover:#676f9d;
+}
+
+.propeties
+{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: 0.3rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-edid-property
+{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1% 0 1%;
+}
+
+.property-edit
+{
+    display: flex;
+    flex-direction: row;
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.35),
+        inset 0 1px rgba(255,255,255,.04);
+    height: 50rem;
+    width: 100rem;
+    gap: 1rem;
+}
+
+.properties-inputs
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    background-color: var(--background-sections);
+    width: 50%;
+    border: 1px solid rgb(0, 0, 0);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.properties-inputs img
+{
+    width:50%;
+    border-radius: 12px;
+}
+
+@media (max-width: 1156px) {
+    .property-edit{
+        
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .properties-inputs
+    {
+        width: 100%;
+    }
+}
+
+.remove-button
+{
+    background:#ef4b58;
+
+    transform:translateY(-2px);
+}
+
+.property-edit-property
+{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.property-edit-rooms
+{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    border: 1px solid rgb(0, 0, 0);
+    background-color: var(--background-sections);
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: 50%;
+    
+}
+
+.property-List-room
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0.5rem;
+    overflow: scroll;
+    height: 80%;
+    gap: 0.3rem;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.properties-edit
+{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.room
+{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius:18px;
+    background:linear-gradient(var(--bacgroind-room));
+    border:1px solid rgba(255,255,255,.08);
+     box-shadow:
+        0 20px 40px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    padding: 1rem;
+    width: 100%;
+}
+
+.property-unit-list
+{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius:18px;
+    background:linear-gradient(var(--bacgroind-room));
+    border:1px solid rgba(255,255,255,.08);
+     box-shadow:
+        0 20px 40px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.04);
+    padding: 1rem;
+    width: 100%;
+}
+
+.property-base,
+.room-base
+{
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+}
+
+.property-base img,
+.room-base img
+{
+    width: 30%;
+    border-radius: 12px;
+}
+
+.room-input
+{
+    display:grid;
+    grid-template-columns:repeat(2,0.5fr);
+    place-content: center;
+    justify-items: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.property-input
+{
+    display:grid;
+    grid-template-columns:repeat(2,0.5fr);
+    place-content: center;
+    justify-items: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.group-propertylist
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.group-propertylist .title
+{
+    font-weight: bold;
+}
+
+.properties-list
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    gap: 0.1rem;
+}
+
+.property-panel
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+    gap: 0.5rem;
+}
+
+#property-currentpage
+{
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+}
+
+.property-totalpages
+{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.header-Room
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-property
+{
+    display:grid;
+    grid-template-columns:repeat(2,5fr);
+    justify-content: center;
+    place-items: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.group-property input[type=text], 
+.group-property input[type=number],
+textarea,
+.group-property select
+{
+    width: 100%;
+    margin: 10px 0;
+    box-sizing: border-box;
+    color: var(--textcolorbase);
+    border: none;
+    background-color: rgba(255, 255, 255, 0.212);
+    border-bottom: 1px solid rgb(38, 0, 255);
+}
+
+.textarea
+{
+    resize: none;
+}
+
+.group-property select:focus
+{
+    outline: none;
+    border-color: #007bff;
+}
+
+.labelremove
+{
+    padding: 0.1rem;
+    background-color: red;
+}
+
+.group-property select option {
+    padding: 10px;
+    font-size: 16px;
+    background-color: var(--background-option);
+}
+
+button,
+input[type=submit]
+{
+    display: inline-block;
+    background-color: var(--color-button-custommer);
+    margin: 0.5rem;
+    border: none;
+    color: var(--textcolorbase);
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar{
+
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+
+    background:var(--scrollbar-background-track);
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--scrollbar-background-thumb);
+
+    border-radius:20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:var(--scrollbar-background-hover);
+}
+
+.properties-inputs label
+.property-edit-room label
+{
+    display: flex;
+    text-align: end;
+}

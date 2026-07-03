@@ -1,59 +1,116 @@
+@model Dataupdated
+
 <div class="profile">
-    <h1>Profile</h1>
+    
 
-    <form class="userdata">
+    <form id="profileform" class="userdataform" asp-controller="Profile" asp-action="UpdateUserData" method="post"  onsubmit="return userdataform();">
+        <h1 id="profileh1">Profile</h1>
 
         <div class="group-userinfo">
-            <label id="Role">Role</label><Label id="UserID">ID</Label> -- <p></p>
+            <div id="messagesuserdata">
+                @if(Model?.Usercreids?.IsActive == false) { <p id='singin-message-error'>Please add your basic information to active the account.</p> }
+            </div>
         </div>
+        <input asp-for="Usercreids.ID" type="hidden" />
+        <input asp-for="Usercreids.Email" type="hidden" />
+        <div class="group-userinfo">
+            <label id="FirstNamelabel" for="FirstName">FirstName</label>
+            <input id="FirstName" type="text" asp-for="Userdata.FirstName"/>
+        </div>
+        <span hidden id="FirstNameerror" class="text-danger">a</span>
+
+        <div class="group-userinfo">
+            <label id="SecondNamelabel" for="SecondName">SecondName</label>
+            <input id="SecondName" type="text" asp-for="Userdata.SecondName" />
+        </div>
+        <span hidden id="SecondNameerror" class="text-danger">a</span>
         
         <div class="group-userinfo">
-            <label id="FirstNamelabel">FirstName</label><input id="FirstName" type="text"  placeholder="FirstName"/>
+            <label id="FathersNamelabel" for="FathersName">FathersName</label>
+            <input id="FathersName" type="text" asp-for="Userdata.FathersName" />
         </div>
+        <span hidden id="FathersNameerror" class="text-danger">a</span>
 
         <div class="group-userinfo">
-            <label id="SecondNamelabel">SecondName</label><input id="SecondName" type="text"  placeholder="SecondName"/>
+            <label id="MothersNamelabel" for="MothersName">MothersName</label>
+            <input id="MothersName" type="text" asp-for="Userdata.MothersName" />
         </div>
+        <span hidden id="MothersNameerror" class="text-danger">a</span>
         
-        <div class="group-userinfo">
-            <label id="FathersNamelabel">FathersName</label><input id="FathersName" type="text"  placeholder="fathersName"/>
+        <div class="group-userinfo" >
+            <label id="Emaillabel" for="Email">Email</label>
+            <input id="Email" type="text" asp-for="Userdata.Email" readonly/>
         </div>
+        <span hidden id="Emailerror" class="text-danger"></span>
 
         <div class="group-userinfo">
-            <label id="MothersNamelabel">MothersName</label><input id="MothersName" type="text"  placeholder="MothersName"/>
+            <label id="Phonelabel" for="Phone">Phone</label>
+            <input id="Phone" type="text" asp-for="Userdata.Phone" />
         </div>
-        
+        <span hidden id="Phoneerror" class="text-danger">a</span>
 
         <div class="group-userinfo">
-            <label id="Emaillabel">Email</label><input id="Email" type="text"  placeholder="Email"/>
+            <label for="Imagen">Avatar</label>
+            <input id="Imagen" type="text" asp-for="Userdata.AvatarImage" />
         </div>
 
-        <div class="group-userinfo">
-            <label id="Phonelabel">Phone</label><input id="Phone" type="password"  placeholder="Phone"/>
-        </div>
-
-        <div class="group-userinfo">
+        <div class="group-userinfo" for="">
             <input type="submit" class="button" id="Update-basic-data" value="" />
         </div>
         
     </form>
 
-    <form class="userpassword">
+    <div class="tax-data">
+        <h2 id="TaxDatah2">Tax Data</h2>
+        <ul>
+            @if(Model.Taxdatas == null || !Model.Taxdatas.Any())
+            {
+                <li>No tax data available.</li>
+            }
+            else
+            {
+                @foreach (var taxdata in @Model.Taxdatas)
+                {
+                    <li>
+                        <strong>Fiscal Info ID:</strong> @taxdata.FiscalInfoID<br />
+                        <strong>Tax ID:</strong> @taxdata.TaxID<br />
+                        <strong>COUNTRY:</strong> @taxdata.COUNTRY<br />
+                        <strong>Tax ID Type:</strong> @taxdata.TaxIDtype<br />
+                        <strong>Type Name:</strong> @taxdata.TypeName<br />
+                        <strong>Image URL:</strong> @taxdata.ImageURL<br />
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+
+    <form id="userpassword" class="userpassword" asp-controller="Profile" asp-action="UpdatePassword" method="post" 
+    onsubmit="return changepasswordcheck();">
+        <div id="messagesuserdata"></div>
         
-        <div class="group-userinfo">
-            <h1 id="Changepasswordlabel">Changepasswordlabel</h1>
-        </div>
+        <h1 id="Changepasswordlabel">Changepasswordlabel</h1>
+        
+
+        <input asp-for="Usercreids.ID" type="hidden" />
+        <input asp-for="Usercreids.Email" type="hidden" />
 
         <div class="group-userinfo">
-            <label id="OldPassworlabel">Old Passwor</label><input id="Password" type="OldPassword"  placeholder="OldPassworlabel"/>
+            <label id="OldPassworlabel" for="Password">Old Password</label>
+            <input id="Password" type="Password" asp-for="ChangePassword.OldPassword"/>
         </div>
+        <span hidden id="Passworderror" class="text-danger">a</span>
 
         <div class="group-userinfo">
-            <label id="Password1label">Password 1</label><input id="Password1" type="Password"  placeholder="Password"/>
+            <label id="Password1label" for="Password1" >Password 1</label>
+            <input id="Password1" type="Password" asp-for="ChangePassword.Password1"/>
         </div>
+        <span hidden id="Password1error" class="text-danger">a</span>
+
         <div class="group-userinfo">
-            <label id="Password2label">Password 2</label><input id="Password2" type="Password"  placeholder="Password2"/>
+            <label id="Password2label" for="Password2">Password 2</label>
+            <input id="Password2" type="Password" asp-for="ChangePassword.Password2"/>
         </div>
+        <span hidden id="Password2error" class="text-danger">a</span>
 
         <div class="group-userinfo">
             <input type="submit" class="button" id="Update-password" value="" />

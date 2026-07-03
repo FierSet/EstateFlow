@@ -31,3 +31,70 @@ index,English,Spanish
 29,Maintenance,Mantenimiento
 30,Settings,Ajustes
 31,Logout,Salir
+32,Account error. Please reloggin,Error de cuenta. Por favor reingresa a la cuneta
+33,First Name,Primer Nombre
+34,Second Name,Segundo nombre
+35,Fathers Name,Apellido Paterno
+36,Mothers Name,Apellido Materno
+37,Phone,Telefono
+38,Update,Actualizar
+39,Change Password,Cambiar contraseña
+40,Current Password,Contraseña actual
+41,New Password,Nueva Contraseña
+42,Repeat new Password,Repite la contrasela
+43,Update Password,Actualizar Contraseña
+44,Tax Data,Datos Fiscales
+45,Error to connet to database,Error al conectar a la base de datos
+46,Requiere first name,Se requiere el primer nombre
+47,Requiere second name,Se requiere el segundo nombre
+48,Requiere mothers name,Se requiere el apellido materno
+49,Requiere fathers name,Se requiere el apellido paterno
+50,Email is requier,Se requiere el email
+51,Phone is requiere,Se requiere numero de telefono
+52,Invalid format,Formato invalido
+53,The password is requier,La contraseña es necesaria
+54,The password must match to the first password,The password is requier
+55,Data not updated,Datos no actualizados
+56,Updated successfull,Actualizacion con exito
+57,Password updated,Contraseña Actualizada
+58,Title,Titulo
+59,Description,Descripción
+60,Address,Dirección
+61,City,Ciudad
+62,State,Estato
+63,Zip Code,Codigo Postal
+64,Price,Precio
+65,Property Type,Tipo de propiedad
+66,Area,Area
+67,Status,Estatus
+68,Rent Value,Valor de Renta
+69,Sale Value,Valor de Venta
+70,Imagen URL,Link de Imagen
+71,My Properties,Mis propiedades
+72,House,Casa
+73,Apartment,Apartamento
+74,Condo,Condominio
+75,Land,Terreno
+76,Available,Disponible
+77,Unavailable,No disponible
+78,Under Contract,En contrato
+79,Sold,Venido
+80,rented,Rentado
+81,Property,Propiedad
+82,+ Add Room,+ Cuarto
+83,Room,Cuarto
+84,Size,tamaño
+85,Room type,Tipo de cuarto
+86,Living Room,Sala
+87,Bedroom,Recamara
+88,Kitchen,Cocina
+80,Bathroom,Baños
+90,Dining Room,Comedor
+91,Office,Oficina
+92,Garage,Cochera
+93,Other,Otros
+94,Owner Error. you aren´t an ouwner,Error de propietario. No eres el propietario
+95,Property added,Propiedad agregada
+96,Property updated,Propiedad actualizada
+97,Country,Pais
+98,Result: ,resultados: 

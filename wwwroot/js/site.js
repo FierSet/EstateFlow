@@ -87,12 +87,14 @@ function togglePassword(id, btn, icons) {
 
 function Loadcreen(idtarget)
 {
+    var container = document.getElementById(idtarget);
+    if (!container) return;
+
     var loadscreen = `<div id="loadingScreen">
                         <div class="spinner"></div>
                     </div>`;
     
-    var container = document.getElementById(idtarget);
-    var haveloadscreen = container.querySelector("#loadingScreen")
+    var haveloadscreen = container.querySelector("#loadingScreen");
     if(haveloadscreen)
         container.removeChild(haveloadscreen);
     else

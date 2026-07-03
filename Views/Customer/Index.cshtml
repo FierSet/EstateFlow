@@ -1,6 +1,8 @@
 @{
     ViewData["Title"] = "Customer";
+    @using Microsoft.AspNetCore.Http
 }
+@model dynamic
 
 <header class="header_customer" id="header_customer">
 
@@ -26,25 +28,27 @@
         <div class="My-Portal" id="My-Portal"></div>
 
         <div class="profile-card">
-            <img src="https://i.pravatar.cc/120" alt="User">
-            <h3>Emily Johnson</h3>
+            <img src='@Context.Session.GetString("AvatarImage")' alt="User">
+            <h3>@Context.Session.GetString("FirstName") @Context.Session.GetString("FathersName")</h3>
         </div>
 
         <div class="customer-listsinterface-container">
             <ul class="customer-interfacelist" id="customer-interfacelist"> 
             </ul>
         </div>
-        <div class="logout-container">
-            <label id="Logout"></label><button class="logout-btn" onclick="location.href='@Url.Action("Index", "Home")'"><i class="fa fa-sign-out"></i></button>
+        <div class="logout-container" onclick="location.href='@Url.Action("Index", "Home")'">
+            <label id="Logout"></label><button class="logout-btn" ><i class="fa fa-sign-out"></i></button>
         </div>
     </div>
     <button class="hamburger-button" id="hamburger-button"><i class="fa-solid fa-bars"></i></button>
     
-
+    <div id="customercodemessage" class="customercode">
+        <div id="customercode"></div>
+    </div>
+    
     <div class="customer-rigth-zone" id="customer-rigth-zone"></div>
 
     
-
 </div>
 
 @section Scripts {
@@ -54,10 +58,51 @@
     loadlist();
     testDatabaseConnection('database-conection-test');
 
-    loadpartialbyinteface("Profile");
+    loadpartialbyinteface('@Model.Partialselect.PartialName');
+
+    addmessagecode(@Model.Messagecode.Code, 'customercode');
 
     const hamburger = document.getElementById('hamburger-button');
     const sidebar = document.getElementById('sidebar');
+
+    function addmessagecode(code, idtarget)
+    {
+        var errorcode = [], successcode = [], neutralcode = [];
+
+        @foreach(var field in Model.Defaultcode.Errorcode)
+        { 
+            @:errorcode.push(@field); 
+        }
+        @foreach(var field in Model.Defaultcode.Successcode)
+        { 
+            @:successcode.push(@field);
+        }
+        @foreach(var field in Model.Defaultcode.Neutralcode)
+        { 
+            @:neutralcode.push(@field); 
+        }
+
+        if(code != 0)
+        {
+            indexlabel[idtarget] = code;
+            getindexlabel([idtarget]);
+
+            document.getElementById('customercodemessage').classList.add(
+                errorcode.includes(code) ? 'background-red' : 
+                successcode.includes(code) ? 'background-greend' :
+                'background-orange'
+            );
+            document.getElementById('customercodemessage').innerHTML += 
+            `<button class="closebutton-custommer" id="closebutton-custommer" onclick="closebutton('customercodemessage')">X</button>`;
+        }
+    }
+    
+    function closebutton(idtarg)
+    {
+        const el = document.getElementById(idtarg);
+        if (el)
+            el.textContent = "";
+    }
 
     function loadlist()
     {
@@ -106,7 +151,7 @@
                     child.classList.remove('Inactive');
                     child.classList.add('active');
                     child.removeAttribute("onclick");
-                    loadpartial(`/Customer/ChangePartial?PartialName`, `./partial/${child.id.replace("-li", "")}`, "customer-rigth-zone")
+                    loadpartial(`/Customer/ChangePartial?PartialName`, `${child.id.replace("-li", "")}`, "customer-rigth-zone")
                 }
                 else
                 {
@@ -115,6 +160,7 @@
                     child.setAttribute("onclick", `loadpartialbyinteface('${child.id.replace("-li", "")}')`);
                 }
             });
+
     }
 
     function loadpartial(partialfunc, partialPath, idtarget)
@@ -123,36 +169,28 @@
 
         ChangeSinglePartial(partialfunc, partialPath, idtarget)
         .then(() => { // After the partial is loaded, set up the labels for the login/signup form
-            
-            if(document.getElementById('loginform')) // Check if the sign-in label exists to determine if the login/signup partial is loaded
-            {
-                getindexlabel();
-                getvaluelabel();
-            }
-            else if(document.getElementById('privacytitle'))
-            {
-                    getindexlabel(
-                    [
-                    'privacytitle',
-                    'beta-version'
-                    ]
-                    );
 
+            getindexlabel();
+            getvaluelabel();
+
+            if(partialPath == 'My-Properties')
+            {
+                loadpropertyList(0);
             }
-            else getindexlabel();
             
         });
 
     }
 
-     const observer = new MutationObserver((mutations) => { // Observe changes to the data-language attribute
+    const observer = new MutationObserver((mutations) => { // Observe changes to the data-language attribute
         mutations.forEach((mutation) => {
             if (mutation.type === 'attributes' && mutation.attributeName === 'data-language') {
                 const newLanguage = document.documentElement.getAttribute('data-language');
                 
                 // Execute your code here when language changes
                 
-                getindexlabel()
+                getindexlabel();
+                getvaluelabel();
             }
 
         });

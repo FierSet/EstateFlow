@@ -1,1 +1,153 @@
-<h1>My-Properties</h1>
+@model Propertys
+
+<div class="propeties">
+    <h1 id="properties-title">My-Properties</h1>
+
+    <div id="property-list" class = "properties-list">
+        <div id="property-totalpages" class="property-totalpages"> 
+            
+            <p id="total-rowslabel">res</p> <p id="total-rows">1</p>
+        </div>
+        <div id="property-panels" class="property-panel">
+            <button id="back-list-property" class="button-addlist-property" onclick="loadpropertyList(-1)"><-</button>
+            <P id="property-currentpage">0/0</P>
+            <button id="next-list-property" class="button-restlist-property" onclick="loadpropertyList(1)">-></button>
+        </div>
+
+        <div id="properties-list" class="properties-edit">
+        </div>
+        
+    </div> 
+    <div id="upload-edid-property" class="upload-edid-property">
+
+        <form id="property-edit" class="property-edit" onsubmit="uploadproperty(); return false;"> 
+        <!--asp-controller="MyProperties" asp-action="Updateproperties" method="post">--> 
+         
+            
+            <div class="properties-inputs">
+                <Label id = "propertyTitlelabel">Property</Label>
+                <div id="usercredentials">
+                    <input id="ID" type="hidden" asp-for="Usercreids.ID" />
+                    <input id="Email" type="hidden" asp-for="Usercreids.Email" />
+                </div>
+                <div id="property-edit-property" class="property-edit-property">
+                    <div class="group-property">
+                        <label id="PropertyIDlabel" for="PropertyID">ID</label>
+                        <input id="PropertyID" type="text" asp-for="Property.PropertyID" readonly/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Titlelabel" for="Title">Title</label>
+                        <input id="Title" type="text" asp-for="Property.Title" required/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Descriptionlabel" for="Description">Description</label>
+                        <textarea id="Description" rows="2" cols="50" asp-for="Property.Description" required >
+                        </textarea>
+                    </div>
+
+                    <div class="group-property">
+                        <label id="Countrylabel" for="Country">Country</label>
+                        <textarea id="Country" rows="2" cols="50" asp-for="Property.Country" required >
+                        </textarea>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Addresslabel" for="Address">Address</label>
+                        <input id="Address" type="text" asp-for="Property.Address" required/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Citylabel" for="City">City</label>
+                        <input id="City" type="text" asp-for="Property.City" required/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Statelabel" for="State">State</label>
+                        <input id="State" type="text" asp-for="Property.State" required/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="ZipCodelabel" for="ZipCode">ZipCode</label>
+                        <input id="ZipCode" type="text" asp-for="Property.ZipCode" required/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="PropertyTypelabel" for="PropertyType">PropertyType</label>
+
+                        <select id="PropertyType" asp-for="Property.PropertyType">
+                            @foreach(PropertyType type in Model?.Dropdown?.PropertyType ?? Enumerable.Empty<PropertyType>())
+                            {
+                                <option id="PropertyType-@type.PropertyTypeID" value="@type.PropertyTypeID" name="@type.TypeName">
+                                    @type.TypeName
+                                </option>
+                            }
+                        </select>
+                        
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="AREAlabel" for="AREA">AREA</label>
+                        <input id="AREA" type="number" step="0.01" asp-for="Property.AREA"/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="Statuslabel" for="Status">Status</label>
+                        <select id="STATUS" asp-for="Property.STATUS">
+                            @foreach(STATUS type in Model?.Dropdown?.STATUS ?? Enumerable.Empty<STATUS>())
+                            {
+                                <option id="STATUS-@type.StatusID" value="@type.StatusID">
+                                    @type.StatusName
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="RentPricelabel" for="RentPrice">RentPrice</label>
+                        <input id="RentPrice" type="number" asp-for="Property.RentPrice" step="0.01"/>
+                    </div>
+                    
+                    <div class="group-property">
+                        <label id="SalePricelabel" for="SalePrice">SalePrice</label>
+                        <input id="SalePrice" type="number" asp-for="Property.SalePrice" step="0.01"/>
+                    </div>
+
+                    <div class="group-property">
+                        <label id="Imageurllabel" for="Imageurl">Imageurl</label>
+                        <input id="Imageurl" type="text" asp-for="Property.Imageurl"/>
+                    </div>
+
+                    <div class="group-property" for="">
+                        <button type="submit" class="button" id="Update-property">Update</button>
+                    </div>
+                </div>
+
+                <img id="property-image" src="../IMG/Home/Home.png" />
+
+            </div>
+
+            @{
+                var roomTypeOptions = "";
+                foreach(RoomType type in Model?.Dropdown?.RoomType ?? Enumerable.Empty<RoomType>())
+                {
+                   roomTypeOptions += $"<option id=\"RoomTypes-{@type.RoomTypeID}-ids\" value=\"{@type.RoomTypeID}\"> {@type.RoomTypeName} </option>";
+                }
+            }
+            <div id="property-edit-room" class="property-edit-rooms">
+                <button type="button" id="btnAddRoom" onclick="addroom('@roomTypeOptions');">
+                    Add Room
+                </button>
+                
+                <div id="property-List-room" class="property-List-room"> </div>
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+</div>

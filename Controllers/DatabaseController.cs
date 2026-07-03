@@ -19,7 +19,6 @@ public class DatabaseController : ControllerBase
     public DatabaseController(RealStateDbContext context)
     {
         _context = context;
-        
     }
     
 
@@ -76,9 +75,9 @@ public class DatabaseController : ControllerBase
             
             if (result != null && result.StartsWith('['))
             {
-                var jsonarr = JsonNode.Parse(result).AsArray();
+                var jsonarr = JsonNode.Parse(result)?.AsArray();
 
-                var jsonarray = jsonarr.FirstOrDefault();
+                var jsonarray = jsonarr?.FirstOrDefault();
                 var matchpassword = passwordHasher.VerifyHashedPassword(
                         new IdentityUser(),
                         jsonarray?["PasswordHash"]?.ToString() ?? "",
@@ -92,6 +91,9 @@ public class DatabaseController : ControllerBase
                         code = 22,
                         message = "Login success",
                         UserID = jsonarray?["UserID"],
+                        FirstName = jsonarray?["FirstName"],
+                        FathersName = jsonarray?["FathersName"],
+                        AvatarImage = jsonarray?["AvatarImage"],
                         Email = jsonarray?["Email"],
                         IsActive = jsonarray?["IsActive"],
                         Role = jsonarray?["Role"]
@@ -153,15 +155,14 @@ public class DatabaseController : ControllerBase
         }
     }
 
-    [HttpPost("Getdatauser")]
-    public async Task<IActionResult> Getdatauser([FromBody] Usersingin user)
+    [HttpPost("Loaddatauser")]
+    public async Task<IActionResult> Loaddatauser([FromBody] Usercreids user)
     {
         try
         {
-
             string tojson = JsonSerializer.Serialize(user);
 
-            var storeprocedure = "Singup";
+            var storeprocedure = "Loadbasicdata";
             var connection = _context.Database.GetDbConnection();
 
             if (connection.State == ConnectionState.Closed)
@@ -170,7 +171,7 @@ public class DatabaseController : ControllerBase
             var command = connection.CreateCommand();
             command.CommandText = storeprocedure;
             command.CommandType = CommandType.StoredProcedure;
-            //command.Parameters.Add(new SqlParameter("@json", tojson));
+            command.Parameters.Add(new SqlParameter("@json", tojson));
 
             var response = await command.ExecuteScalarAsync();
             string? result = response != DBNull.Value ? response?.ToString() : "{}";
@@ -182,4 +183,179 @@ public class DatabaseController : ControllerBase
             return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
         }
     }
+
+    [HttpPost("Updatedatauser")]
+    public async Task<IActionResult> Updatedatauser([FromBody] Dataupdated dataupdated)
+    {
+        try
+        {
+            string tojson = JsonSerializer.Serialize(dataupdated);
+            
+            var storeprocedure = "update_userdata";
+            var connection = _context.Database.GetDbConnection();
+
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+            
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@json", tojson));
+
+            var response = await command.ExecuteScalarAsync();
+            string? result = response != DBNull.Value ? response?.ToString() : "{}";
+            
+            return Ok(new {Status = 200, jsonresponse = result });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+    }
+
+    [HttpPost("Updatepassword")]
+    public async Task<IActionResult> Updatepassword([FromBody] Dataupdated dataupdated)
+    {
+        try
+        {
+            var client = new HttpClient();
+
+            string tojson = JsonSerializer.Serialize(dataupdated);
+
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            Usersingin user = new Usersingin {
+                Email = dataupdated?.Usercreids?.Email,
+                Password =  dataupdated?.ChangePassword?.OldPassword
+            };
+
+            var response = await client.PostAsJsonAsync(
+                $"{baseUrl}/api/Database/Signin",
+                user
+            );
+
+            string result = await response.Content.ReadAsStringAsync();
+
+             var json = JsonNode.Parse(result);
+            var jsoncode = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
+
+            if(jsoncode?["code"]?.ToString() != "22")
+            {
+                return Ok(new {Status = 200, jsonresponse = jsoncode });
+            }
+            var storeprocedure = "Update_password";
+
+            var passwordHasher = new PasswordHasher<IdentityUser>();
+            string haspassword = 
+                passwordHasher.HashPassword(
+                    new IdentityUser(), 
+                    dataupdated?.ChangePassword?.Password2 ?? string.Empty
+                );
+            
+            user.Password = haspassword;
+
+            string Passwordjson = JsonSerializer.Serialize(user);
+            var connection = _context.Database.GetDbConnection();
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+            
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@json", Passwordjson));
+
+            var responsepasw = await command.ExecuteScalarAsync();
+            //string? resultpassword = jsonpassword != DBNull.Value ? jsonpassword?.ToString() : "{}";
+
+            return Ok(new {Status = 200, jsonresponse = responsepasw });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+    }
+
+    [HttpGet("Property_list_Parameters")]
+    public async Task<IActionResult> Property_list_Parameters()
+    {
+        try
+        {
+            var storeprocedure = "Property_list_Parameters";
+            var connection = _context.Database.GetDbConnection();
+            
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+
+            var Listoflists = await command.ExecuteScalarAsync();
+
+            return Ok(new {Status = 200, jsonresponse = Listoflists });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+    }
+
+    [HttpPost("Create_alter_property")]
+    public async Task<IActionResult> Create_property([FromBody] Propertys Propertys)
+    {
+        try
+        {
+            string tojson = JsonSerializer.Serialize(Propertys);
+            
+            var storeprocedure = "Create_alter_property";
+            var connection = _context.Database.GetDbConnection();
+            
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@json", tojson));
+
+            var response = await command.ExecuteScalarAsync();
+
+            return Ok(new {Status = 200, jsonresponse = response });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+    }
+
+    [HttpPost("Load_properties")]
+    public async Task<IActionResult> Load_properties([FromBody] GetPropertieslist GetPropertieslist)
+    {
+
+        try
+        {
+            string tojson = JsonSerializer.Serialize(GetPropertieslist);
+            
+            var storeprocedure = "Load_properties";
+            var connection = _context.Database.GetDbConnection();
+            
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@json", tojson));
+
+            var response = await command.ExecuteScalarAsync();
+
+            return Ok(new {Status = 200, jsonresponse = response });
+        }
+        catch (Exception ex)
+        {
+            return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
+        }
+
+    }
+
 }
