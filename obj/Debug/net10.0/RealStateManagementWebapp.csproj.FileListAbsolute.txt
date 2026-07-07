@@ -1050,4 +1050,4 @@ C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\uepevnjp58-{0}-nxqj7g56aq-nxqj7g56aq.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\30nuiifh69-{0}-kq1a23c41p-kq1a23c41p.gz
 C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\eqwhqj89k4-{0}-fnqeb6p76v-fnqeb6p76v.gz
-C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\ftiwb7se6v-{0}-rl9kokny6d-rl9kokny6d.gz
+C:\Users\Miguel\Documents\git\EstateFlow\EstateFlow\obj\Debug\net10.0\compressed\ftiwb7se6v-{0}-g98k1buig8-g98k1buig8.gz
