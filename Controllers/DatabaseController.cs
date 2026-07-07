@@ -6,6 +6,7 @@ using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.Json.Nodes;
+using System.Text;
 
 
 namespace RealStateManagementWebapp.Controllers;
@@ -347,15 +348,54 @@ public class DatabaseController : ControllerBase
             command.CommandType = CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@json", tojson));
 
-            var response = await command.ExecuteScalarAsync();
+            //var json = await command.ExecuteScalarAsync();
+            string jsonCompleto;
+            using (var reader = command.ExecuteReader())
+            {
+                var sb = new StringBuilder();
+                while (reader.Read())
+                {
+                    sb.Append(reader.GetValue(0).ToString());
+                }
+                jsonCompleto = sb.ToString();
+            }
 
-            return Ok(new {Status = 200, jsonresponse = response });
+            //Console.WriteLine(jsonCompleto);
+            return Ok(new {Status = 200, jsonresponse = jsonCompleto });
         }
         catch (Exception ex)
         {
             return Ok(new {Status = 500, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex });
         }
 
+    }
+
+     [HttpPost("Load_dashboard")]
+    public async Task<IActionResult> Load_dashboard(Usercreids user)
+    {
+        try
+        {  
+            string tojson = JsonSerializer.Serialize(user);
+
+            var storeprocedure = "Load_dashboard";
+            var connection = _context.Database.GetDbConnection();
+            
+            if (connection.State == ConnectionState.Closed)
+                await connection.OpenAsync();
+
+            var command = connection.CreateCommand();
+            command.CommandText = storeprocedure;
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.Add(new SqlParameter("@json", tojson));
+
+            var json = await command.ExecuteScalarAsync();
+
+            return Ok(new {Status = 200, jsonresponse = json });
+        }catch(Exception ex)
+        {
+
+            return Ok(new {Status = 200, jsonresponse = "{\"code':17,\"message\":\"Error in peocess\"}", exeption = ex  });
+        }
     }
 
 }

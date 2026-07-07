@@ -98,3 +98,17 @@ public class GetPropertieslist
     public Usercreids? Usercreids {get; set;}
     public int? Page {get; set;} = 1;
 }
+
+public class PropertyResponse
+{
+    public PageInfo? PageInfo { get; set; }
+    public List<Property>? Property { get; set; }
+}
+
+public class PageInfo
+{
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalRows { get; set; }
+    public int TotalPages { get; set; }
+}

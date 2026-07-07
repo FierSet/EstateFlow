@@ -12,7 +12,7 @@ public class CustomerController : Controller
         Partialselect = new PartialSelected { PartialName = "Dashboard"},
     };
 
-    public IActionResult Index(Messagecode Messagecode, string partialName = "My-Properties")
+    public IActionResult Index(Messagecode Messagecode, string partialName = "Dashboard")
     {   
         _Parameter?.Partialselect?.PartialName = partialName;
         _Parameter?.Messagecode?.Code = Messagecode.Code;
@@ -35,7 +35,7 @@ public class CustomerController : Controller
         var  GetModel = new Dictionary<string, Func<Task<object>>> 
         { 
             { "Profile", async () => await Getuserdata() },
-            { "Dashboard", async () => "1234" },
+            { "Dashboard", async () => await getdashboard() },
             { "My-Properties", async () => await Getpropertys() },
             { "Payments", async () => "1234" },
             { "Maintenance", async () => "1234" },
@@ -45,6 +45,45 @@ public class CustomerController : Controller
         var Model = await GetModel[partialName]();
 
         return PartialView("./partial/" + partialName, Model);
+    }
+
+    public async Task<Dashboard> getdashboard()
+    {
+        string? ID = HttpContext.Session.GetString("ID");
+        string? Email = HttpContext.Session.GetString("Email");
+
+        Usercreids user = new()
+        {
+            ID = int.Parse(ID?.ToString() ?? ""),
+            Email = Email?.ToString() ?? "",
+        };
+
+        var client = new HttpClient();
+        string baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+        var response = await client.PostAsJsonAsync(
+            $"{baseUrl}/api/Database/Load_dashboard",
+            user
+        );
+
+        string result = await response.Content.ReadAsStringAsync();
+        var jsonresult = JsonNode.Parse(result);
+
+        var json = JsonNode.Parse(jsonresult?["jsonresponse"]?.ToString() ?? "{}");
+
+        Dashboard dashboard = new();
+
+        
+        foreach(var prop in json?["Propertycount"]?.AsArray() ?? [])
+        {
+            dashboard?.Propertiescount?.Add( new Propertycount
+            {
+                PropertyTypeID = int.Parse(prop?["PropertyType"]?.ToString() ?? "0"),
+                TOTAL = int.Parse(prop?["TOTAL"]?.ToString() ?? "0")
+            });
+        }
+
+        return dashboard ?? new Dashboard();//propertys ?? new Propertys();
     }
 
     public async Task<Propertys> Getpropertys()
@@ -75,8 +114,8 @@ public class CustomerController : Controller
             IsActive = bool.Parse(HttpContext.Session.GetString("IsActive")?.ToString() ?? "false")
         };
 
-        propertys?.Usercreids?.ID =  int.Parse(HttpContext.Session.GetString("ID") ?? "");
-        propertys?.Usercreids?.Email = HttpContext.Session.GetString("Email");
+        //propertys?.Usercreids?.ID =  int.Parse(HttpContext.Session.GetString("ID") ?? "");
+        //propertys?.Usercreids?.Email = HttpContext.Session.GetString("Email");
 
         foreach(var prop in PropertyType?.AsArray() ?? [])
         {

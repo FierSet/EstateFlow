@@ -23,7 +23,6 @@ public class MyPropertiesController : Controller
 
         try
         {
-
             var client = new HttpClient();
 
             string baseUrl = $"{Request.Scheme}://{Request.Host}";
@@ -49,7 +48,6 @@ public class MyPropertiesController : Controller
             routeValues["messagecode.Message"] = "An error occurred while updating the property: " + er.Message;
             return Content(JsonSerializer.Serialize(routeValues));//, routeValues);
         }
-        
     }
 
      [HttpPost]
@@ -70,9 +68,8 @@ public class MyPropertiesController : Controller
             string result = await response.Content.ReadAsStringAsync();
         
             var json = JsonNode.Parse(result);
-
-            var jsoncode = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
-
+            
+            var jsoncode = json?["jsonresponse"]?.ToString() ?? "{}";
             return Content(JsonSerializer.Serialize(jsoncode));//, routeValues);
         }catch(Exception er)
         {

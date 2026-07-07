@@ -85,15 +85,18 @@ var indexlabel = {
     'btnAddRoom': 82,
     'Countrylabel':97,
 
-    'RoomType-1-0': 86,
-    'RoomType-2-0': 87,
-    'RoomType-3-0': 88,
-    'RoomType-4-0': 89,
-    'RoomType-5-0': 90,
-    'RoomType-6-0': 91,
-    'RoomType-7-0': 92,
-    'RoomType-8-0': 93,
-    'total-rowslabel': 98
+    'optionroomtype-1': 86,
+    'optionroomtype-2': 87,
+    'optionroomtype-3': 88,
+    'optionroomtype-4': 89,
+    'optionroomtype-5': 90,
+    'optionroomtype-6': 91,
+    'optionroomtype-7': 92,
+    'optionroomtype-8': 93,
+    'total-rowslabel': 98,
+    'emptpropertylistmessage': 100,
+    'newproperty': 101,
+    'toggle-tolist': 102
     
 }
 

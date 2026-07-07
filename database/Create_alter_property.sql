@@ -29,7 +29,7 @@ BEGIN
             "message" : "Property updated"
         },
 		{
-            "code": 97,
+            "code": 99,
             "message" : "Property Not updated"
         }]';
 	
@@ -48,8 +48,9 @@ BEGIN
 
 		RETURN;
 	END
-    
+
     BEGIN TRY   
+
         BEGIN TRANSACTION;
         --WILL ADD DOCUMENTATION VERIFICATION HERE
 
@@ -207,6 +208,7 @@ BEGIN
 
         COMMIT TRANSACTION;
         RETURN;
+
     END TRY
     BEGIN CATCH
 
@@ -220,12 +222,12 @@ BEGIN
                 code INT,
                 message NVARCHAR(255)
             )
-        WHERE code = 97
+        WHERE code = 99
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
 
 		RETURN; --THROW;
     END CATCH
-    
+
     
 END
 
@@ -241,39 +243,38 @@ EXEC Create_alter_property '{
     "Property": {
         "Rooms": [
             {
-                "RoomID":1,
-                "PropertyID": 1,
-                "Remove": "false",
-                "Size": 2000,
-                "Description": "Description2",
-                "RoomType": 2,
-                "Imageurl": "Imagen URL2"
+                "RoomID": 3,
+                "PropertyID": 2,
+                "Remove": "undefined",
+                "Size": 123,
+                "Description": "un cuarto bien chido",
+                "RoomType": 1,
+                "Imageurl": "https://www.livehome3d.com/assets/img/articles/rooms-in-house/luxurious-living-room@2x.jpg"
             },
             {
-                "RoomID": 2,
-                "PropertyID": 1,
-                "Remove": "false",
-                "Size": 3000,
-                "Description": "Description3",
-                "RoomType": 3,
-                "Imageurl": "Imagen URL3"
+                "RoomID": 4,
+                "PropertyID": 2,
+                "Remove": "undefined",
+                "Size": 123,
+                "Description": "Una cocina bien chida",
+                "RoomType": 1,
+                "Imageurl": "https://www.harveyjones.com/wp-content/uploads/2017/08/modern-kitchen-design_full-1-1.jpg"
             }
         ],
-        "PropertyID": 1,
-        "Title": "Title2",
-        "Description": "Description2",
-        "Country": "Country2",
-        "Address": "Address2",
-        "City": "City2",
-        "State": "State2",
-        "ZipCode": "Zip Code2",
-        "PropertyType": 2,
-        "AREA": 2000,
-        "": "Property.SalePrice",
-        "STATUS": 2,
-        "RentPrice": 200,
-        "SalePrice": 200,
-        "Imageurl": "Imagen URL2"
+        "PropertyID": 2,
+        "Title": "casachida",
+        "Description": "casa bien chida",
+        "Country": "mexico",
+        "Address": "un lugar bien chido",
+        "City": "una ciudad bien chida",
+        "State": "un estado bien chido",
+        "ZipCode": "un zc bien chido",
+        "PropertyType": 1,
+        "AREA": 1000,
+        "STATUS": 1,
+        "RentPrice": 3000,
+        "SalePrice": 100000,
+        "Imageurl": "https://www.bhg.com/thmb/3Vf9GXp3T-adDlU6tKpTbb-AEyE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-modern-house-curved-patio-archway-c0a4a3b3-aa51b24d14d0464ea15d36e05aa85ac9.jpg"
     }
 }'
 */

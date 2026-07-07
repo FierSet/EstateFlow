@@ -4,24 +4,24 @@
 }
 @model dynamic
 
-<header class="header_customer" id="header_customer">
-
-    <div class="config-pref">
-        <div class="database-conection-test" id ="database-conection-test" onclick="testDatabaseConnection('database-conection-test')"> </div>
-
-        <input id="inputtextlanguage" class="LanguageInput" type="text" name="language" list='languageSelect' placeholder="Select or type language">
-        <datalist class="datalist" id="languageSelect">
-        </datalist> 
-
-        <label class="switch" ID="darkModeToggle">
-            <input type="checkbox" checked onclick="darkMode()">
-            <span class="slider round"></span>
-        </label>
-    </div>
-
-</header>
-
 <div class="customer-container">
+
+    <header class="header_customer" id="header_customer">
+
+        <div class="config-pref">
+            <div class="database-conection-test" id ="database-conection-test" onclick="testDatabaseConnection('database-conection-test')"> </div>
+
+            <input id="inputtextlanguage" class="LanguageInput" type="text" name="language" list='languageSelect' placeholder="Select or type language">
+            <datalist class="datalist" id="languageSelect">
+            </datalist> 
+
+            <label class="switch" ID="darkModeToggle">
+                <input type="checkbox" checked onclick="darkMode()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+    </header>
 
 
     <div class="sidebar" id="sidebar">
@@ -174,10 +174,8 @@
             getvaluelabel();
 
             if(partialPath == 'My-Properties')
-            {
                 loadpropertyList(0);
-            }
-            
+
         });
 
     }

@@ -1,15 +1,40 @@
 let roomIndex = 0;
 let page = 1;
 var propertyarray = [];
+let roomtypelist = [];
+var totalpages = 1;
+var roomytypeoptions = "";
+var hidecreateproperty = true;
+var defaulthouseicon = "../IMG/Home/No_Imagen_House.png";
+var defaultroomicon = "../IMG/room/No_Imagen_Room.png";
 
-function baseroom(index, roomlisttype)
+function toggleshowproperty()
 {
+    hidecreateproperty = !hidecreateproperty;
+    showpropertycreation(hidecreateproperty);
+}
+
+function showpropertycreation(IShidden)
+{
+   
+    indexlabel["toggle-tolist"] = IShidden ? 102: 103;
+    getindexlabel(["toggle-tolist"]);
+    const propertycreation = document.getElementById('upload-edid-property').hidden = IShidden;
+    const propertylist = document.getElementById('property-list').hidden = !IShidden;
+
+}
+
+function baseroom(index)
+{
+    const template = document.getElementById("RoomTypeOptions");
+    const newSelect = template.innerHTML;
+
     const defaultimg ="../IMG/room/room-base.png";
     return `
         <div id="room-${index}" class="room">
 
             <div id="header-Room-${index}" class="header-Room">
-                <Label id="Room-label-${index}">Room </Label> <button type="button" id="header-button-${roomIndex}" class="remove-button" onclick="removeroom('${roomIndex}');">
+                <Label id="Room-label-${index}">Room </Label> <button type="button" id="header-button-${index}" class="remove-button" onclick="removeroom('${index}');">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
@@ -18,10 +43,10 @@ function baseroom(index, roomlisttype)
                 <div id="room-input-${index}" class="room-input"> 
                     <input id="RoomID-${index}" type="hidden" name="Property.Rooms[${index}].RoomID" />
                     <input id="PropertyID-${index}" type="hidden" name="Property.Rooms[${index}].PropertyID" />
-                    <input id="Remove-${index}" type="hidden" name="Property.Rooms[${index}].Remove" value="false"/>
+                    <input id="Remove-${index}" type="hidden" name="Property.Rooms[${index}].Remove" value="0"/>
                     <div class="group-property">
                         <label id="Sizelabel-${index}" for="Size">Size</label>
-                        <input id="Size-${index}" type="number" step="0.01" name="Property.Rooms[${roomIndex}].Size" />
+                        <input id="Size-${index}" type="number" step="0.01" name="Property.Rooms[${index}].Size" value="0"/>
                     </div>
                     
                     <div class="group-property">
@@ -32,13 +57,13 @@ function baseroom(index, roomlisttype)
                     <div class="group-property">
                         <label id="RoomTypelabel-${index}" for="RoomsType-${index}">RoomType</label>
                         <SELECT id="RoomType-${index}" name="Property.Rooms[${index}].RoomType">
-                            ${roomlisttype.replaceAll("ids",index)}
+                            ${newSelect.replaceAll("ids",index)}
                         </SELECT>
                     </div>
 
                     <div class="group-property">
-                        <label id="Imageurllabel-${roomIndex}" for="Imageurl">Imageurl</label>
-                        <input id="Imageurl-${roomIndex}" type="text" name="Property.Rooms[${roomIndex}].Imageurl" />
+                        <label id="Imageurllabel-${index}" for="Imageurl-${index}">Imageurl</label>
+                        <input id="Imageurl-${index}" type="text" name="Property.Rooms[${index}].Imageurl" class="Imageurl" data-preview="Room-Image-${index}"/>
                     </div>
                 </div>
                 
@@ -51,74 +76,97 @@ function propertyunit(jsons)
     var rooms = [];
     var roomcount = "";
 
-    jsons.Rooms.forEach(room => {
-        if(rooms[room.RoomTypeName] == null)
-        {
-            rooms[room.RoomTypeName] = 0;
-        }
-        rooms[room.RoomTypeName]++;
+    jsons.Rooms.forEach(room => { // count the type room
+        
+        if(rooms[room.RoomType] == null)
+            rooms[room.RoomType] = 0;
+        rooms[room.RoomType]++;
     });
+
+    araysrooms = [];
 
     Object.keys(rooms).forEach(roomType => {
 
-        roomcount += `${roomType}: ${rooms[roomType]}<br>`;
+        let idlabel = `optionroomtype-${roomType}`;
+        let idstring = `${idlabel}-${jsons.PropertyID}`;
+        roomcount += `<span> <span id="${idstring}"> </span>: ${rooms[roomType]}</span>`;
+        araysrooms.push(idstring);
+        indexlabel[idstring] = indexlabel[idlabel];
     });
 
-    return `
+    let propertyid = `PropertyType-${jsons.PropertyType}`;
+    let propertytypelabel = `${propertyid}-${jsons.PropertyID}`;
+    araysrooms.push(propertytypelabel);
+    indexlabel[propertytypelabel] = indexlabel[propertyid];
 
-        <div id="property-list-${jsons.PropertyID}" class="property-unit-list">
+    let statusid = `STATUS-${jsons.STATUS}`;
+    let statuslabel = `${statusid}-${jsons.PropertyID}`;
+    araysrooms.push(statuslabel);
+    indexlabel[statuslabel] = indexlabel[statusid];
+
+    let rentid = "RentPricelabel";
+    let reentlabel = `${rentid}-property-${jsons.PropertyID}`;
+    araysrooms.push(reentlabel);
+    indexlabel[reentlabel] = indexlabel[rentid];
+
+    let saleid = "SalePricelabel";
+    let salelabel = `${saleid}-property-${jsons.PropertyID}`;
+    araysrooms.push(salelabel);
+    indexlabel[salelabel] = indexlabel[saleid];
+
+    return [`
+        <div id="property-list-${jsons.PropertyID}" class="property-unit-list" onclick="selectproperty(${jsons.PropertyID})">
 
             <div id="property-base-${jsons.PropertyID}" class="property-base">
                 <img id="property-Image-${jsons.PropertyID}" src="${jsons.Imageurl}" />
                 <div id="property-input-${jsons.PropertyID}" class="property-input"> 
                     
-                    <div class="group-propertylist">
+                    <div class="group-propertylist titles">
                         <label id="Title-${jsons.PropertyID}" class="title">${jsons.Title}</label>
                     </div>
                     
                     <div class="group-propertylist">
-                        <label id="Address-property-${jsons.PropertyID}">
-                            ${jsons.Country + "," + jsons.State + "," + 
-                                jsons.City + "," + jsons.Address + "," + 
+                        <span id="Address-property-${jsons.PropertyID}">
+                            ${jsons.Country + ", " + jsons.State + ", " + 
+                                jsons.City + ", " + jsons.Address + ", " + 
                                 jsons.ZipCode}
-                        </label>
+                        </span>
                     </div>
 
                     <div class="group-propertylist">
-                        <label id="PropertyType-property-${jsons.PropertyID}">${jsons.PropertyType}</label>
+                        <span id="${propertytypelabel}"> </span>
                     </div>
 
                     <div class="group-propertylist">
-                        <label id="AREA-property-${jsons.PropertyID}">${jsons.AREA}</label>
+                        <span id="AREA-property-${jsons.PropertyID}"> ${jsons.AREA} m&sup2;</span>
                     </div>
 
                     <div class="group-propertylist">
-                        <label id="STATUS-property-${jsons.PropertyID}">${jsons.STATUS}</label>
+                        <label id="${statuslabel}">${jsons.STATUS}</label>
                     </div>
 
                     <div class="group-propertylist">
-                        <label id="RentPrice-property-${jsons.PropertyID}">${jsons.RentPrice}</label>
+                        <span id="${reentlabel}">Rent</span> <span>: $${jsons.RentPrice}</span>
                     </div>
 
                     <div class="group-propertylist">
-                        <label id="SalePrice-property-${jsons.PropertyID}">${jsons.SalePrice}</label>
+                        <span id="${salelabel}">Sale</span> <span>: $${jsons.SalePrice}</span>
                     </div>
 
-                    <div class="group-propertylist">
-                        <label id="rooms-property-${jsons.PropertyID}">${roomcount}</label>
+                    <div class="group-propertylist rooms">
+                        ${roomcount}
                     </div>
 
                 </div>
                 
             </div>
         </div>
-    
-    `;
+    `, araysrooms];
 }
 
-function addroom(roomlisttype)
+function addroom()
 {
-    const room = baseroom(roomIndex, roomlisttype);
+    const room = baseroom(roomIndex);
 
     document.getElementById("property-List-room")
         .insertAdjacentHTML("beforeend", room);
@@ -142,14 +190,10 @@ function addroom(roomlisttype)
         [
         `Room-label-${roomIndex}`, `Sizelabel-${roomIndex}`, `Descriptionlabel-${roomIndex}`,
         `RoomTypelabel-${roomIndex}`, `Imageurllabel-${roomIndex}`,
-        `RoomTypes-1-${roomIndex}`,
-        `RoomTypes-2-${roomIndex}`,
-        `RoomTypes-3-${roomIndex}`,
-        `RoomTypes-4-${roomIndex}`,
-        `RoomTypes-5-${roomIndex}`,
-        `RoomTypes-6-${roomIndex}`,
-        `RoomTypes-7-${roomIndex}`,
-        `RoomTypes-8-${roomIndex}`
+        `RoomTypes-1-${roomIndex}`, `RoomTypes-2-${roomIndex}`, 
+        `RoomTypes-3-${roomIndex}`, `RoomTypes-4-${roomIndex}`, 
+        `RoomTypes-5-${roomIndex}`, `RoomTypes-6-${roomIndex}`,
+        `RoomTypes-7-${roomIndex}`, `RoomTypes-8-${roomIndex}`
         ]
     );
 
@@ -163,29 +207,38 @@ function removeroom(IDROOM)
     var roomid = document.getElementById(`RoomID-${IDROOM}`);
     var header = document.getElementById(`header-Room-${IDROOM}`);
     var removemessage = `<Label id="labelremove-room-${IDROOM}" class="labelremove">Remove</Label>`;
-
-    if(roomid.value != null)
+    var isremove = document.getElementById(`Remove-${IDROOM}`);
+    if(roomid.value == null)
         room.remove();
     else    
     {
-        header.innerHTML += removemessage;
-        document.getElementById(`Remove-${IDROOM}`).value = true;
+        if(isremove.value == 0)
+        {
+            header.innerHTML += removemessage;
+            isremove.value = 1;
+        }
+        else
+        {
+            const removelabel = document.getElementById(`labelremove-room-${IDROOM}`);
+            header.removeChild(removelabel);
+            isremove.value = 0;
+        }
     }
 }
 
 async function loadpropertyList(movement)
 {
+    propertyarray = [];
     var propertylist = document.getElementById('properties-list');
     var id = parseInt(document.getElementById("ID").value);
-    var totalpages = document.getElementById("total-pages");
-
     var totalrows = document.getElementById("total-rows");
-
     var pagescount = document.getElementById("property-currentpage");
 
     if(page + movement <= 0 || page + movement > parseInt(totalpages))
         return;
 
+    page += movement;
+    propertylist.replaceChildren();
     var data = {
         "Usercreids": {
             "ID": id
@@ -202,31 +255,95 @@ async function loadpropertyList(movement)
         })
         .then(response => response.json())
         .then(data => {
-             
+             //console.log(data);
             return data;
         });
 
-        var PageInfo = JSON.parse(response["PageInfo"]);
+        var json = JSON.parse(response);
+        var PageInfo = JSON.parse(json["PageInfo"]);
+        
+        totalrows.textContent = PageInfo["TotalRows"];
+        totalpages = PageInfo["TotalPages"];
+        pagescount.textContent = PageInfo["Page"] + "/" + PageInfo["TotalPages"];
+        
+        
+        var propertylisthtml = Array.isArray(json["Properties"]) ? json["Properties"] : [];
+        if(propertylisthtml.length  > 0)
+        {
+            propertylisthtml.forEach(property => {
+                
+                 property.Rooms?.forEach(room => {
+                    room.Remove = 0;
+                });
+                propertyarray.push(property);
+                let [propertyhtml, arraysrooms] = propertyunit(property);
+                propertylist.insertAdjacentHTML("beforeend", propertyhtml);
+                //property-Image-${jsons.PropertyID
+                document.getElementById(`property-Image-${property.PropertyID}`).onerror = function () {
+                    this.src = defaultroomicon;
+                };
 
-        totalrows.textContent = PageInfo.TotalRows;
-        pagescount.textContent = PageInfo.Page + "/" + PageInfo.TotalPages;
+                getindexlabel(arraysrooms);
 
-        var propertylisthtml = Array.isArray(response["Properties"]) ? response["Properties"] : [];
-
-        console.log(propertylisthtml);
-        propertylisthtml.forEach(property => {
-            
-            
-            propertyarray.push(property);
-            propertylist.insertAdjacentHTML("beforeend", propertyunit(property));
-
-        });
+            });
+        }
+        else
+        {
+            propertylist.innerHTML = `<h1 id="emptpropertylistmessage"></h1>`;
+            getindexlabel(['emptpropertylistmessage']);
+        }
 
     }
     catch(err)
     {
         console.log(err);
     }
+}
+
+function selectproperty(PropertyID)
+{
+    hidecreateproperty = !hidecreateproperty;
+    showpropertycreation(hidecreateproperty)
+
+    const propertybyarray = propertyarray.find(p => p.PropertyID === PropertyID);
+
+     const property = document.getElementById("property-editall")
+    .querySelectorAll("input, select, textarea, img");
+
+    const rooms = document.getElementById("property-List-room");
+    rooms.replaceChildren();
+
+    property.forEach(element => {
+        
+        if(element.id != "ID" && element.id != "Email")
+        {
+            element.value = propertybyarray[element.id];
+            if(element.tagName == "IMG")
+            {
+                element.src = propertybyarray["Imageurl"];
+                element.onerror = function () {
+                    this.src = defaulthouseicon;
+                };
+            }
+        }
+    });
+
+    propertybyarray.Rooms.forEach(room => {
+        rooms.insertAdjacentHTML("beforeend", baseroom(room.RoomID));
+
+        const getroom = document.getElementById(`room-${room.RoomID}`).querySelectorAll("input, select, textarea, img");
+        getroom.forEach(r => {
+            r.value = room[r.id.replace(/-[^-]+$/, "")];
+            if(r.tagName = "IMG")
+            {
+                r.src = room["Imageurl"];
+                r.onerror = function () {
+                    this.src = defaultroomicon;
+                };
+            }
+        });
+    });
+    
 }
 
 async function uploadproperty()
@@ -261,14 +378,14 @@ async function uploadproperty()
         room.querySelectorAll("input, select, textarea").forEach(element =>{
             subdata[element.id.replace(/-[^-]+$/, "")] = 
             element.value !== "" && 
-            (element.id.replace(/-[^-]+$/) == "RoomID" ||
-            element.id.replace(/-[^-]+$/) == "PropertyID" ||
+            (element.id.replace(/-[^-]+$/, "") == "RoomID" ||
+            element.id.replace(/-[^-]+$/, "") == "PropertyID" ||
             element.type == "number" || element.tagName == "SELECT") ? 
             Number(element.value): element.value == "" ? null : element.value;
         });
         data.Property.Rooms.push(subdata);
     });
-    console.log(data);
+
     try
     {
        
@@ -284,19 +401,43 @@ async function uploadproperty()
         })
         .then(response => response.json())
         .then(data => {
-             console.log(data)
-             if (data.status !== 200)
-                throw new Error("Conection error")
+            
+            indexlabel['property-message'] = data['messagecode.Code'];
+            getindexlabel(['property-message']);
             return data;
         });
         
-        
+        cleanpropertyedit();
+        hidecreateproperty = !hidecreateproperty;
+        showpropertycreation(hidecreateproperty)
+        loadpropertyList(0);
+
     }
     catch(err)
     {
         console.log(err);
     }
-
-    
-    return false;
 }
+
+function cleanpropertyedit()
+{
+    const propertydelete = document.getElementById("property-edit-property").querySelectorAll("input, select, textarea");
+    const roomstodelete = document.getElementById("property-List-room").replaceChildren();
+
+    propertydelete.forEach(element => {
+        element.value = null;
+    });
+}
+
+document.addEventListener("input", function (e) {
+    
+    if (!e.target.matches(".Imageurl"))
+        return;
+
+    const imageId = e.target.dataset.preview;
+    const image = document.getElementById(imageId);
+
+    if (image) {
+        image.src = e.target.value;
+    }
+});

@@ -1,11 +1,12 @@
 @model Propertys
 
 <div class="propeties">
-    <h1 id="properties-title">My-Properties</h1>
 
+    <h1 id="properties-title">My-Properties</h1>
+    <div id="property-message"></div>
+    <button id="toggle-tolist" onclick="toggleshowproperty()">Create New property</button>
     <div id="property-list" class = "properties-list">
         <div id="property-totalpages" class="property-totalpages"> 
-            
             <p id="total-rowslabel">res</p> <p id="total-rows">1</p>
         </div>
         <div id="property-panels" class="property-panel">
@@ -18,14 +19,17 @@
         </div>
         
     </div> 
-    <div id="upload-edid-property" class="upload-edid-property">
+    <div id="upload-edid-property" class="upload-edid-property" hidden>
 
         <form id="property-edit" class="property-edit" onsubmit="uploadproperty(); return false;"> 
         <!--asp-controller="MyProperties" asp-action="Updateproperties" method="post">--> 
          
             
-            <div class="properties-inputs">
-                <Label id = "propertyTitlelabel">Property</Label>
+            <div class="properties-inputs" id="property-editall">
+                <button id="newproperty" onclick="cleanpropertyedit()">
+                    NEW
+                </button>
+                <Label id = "propertyTitlelabel">Property</Label> 
                 <div id="usercredentials">
                     <input id="ID" type="hidden" asp-for="Usercreids.ID" />
                     <input id="Email" type="hidden" asp-for="Usercreids.Email" />
@@ -89,11 +93,11 @@
                     
                     <div class="group-property">
                         <label id="AREAlabel" for="AREA">AREA</label>
-                        <input id="AREA" type="number" step="0.01" asp-for="Property.AREA"/>
+                        <input id="AREA" type="number" step="0.01" asp-for="Property.AREA" value="0"/>
                     </div>
                     
                     <div class="group-property">
-                        <label id="Statuslabel" for="Status">Status</label>
+                        <label id="Statuslabel" for="STATUS">Status</label>
                         <select id="STATUS" asp-for="Property.STATUS">
                             @foreach(STATUS type in Model?.Dropdown?.STATUS ?? Enumerable.Empty<STATUS>())
                             {
@@ -106,17 +110,17 @@
                     
                     <div class="group-property">
                         <label id="RentPricelabel" for="RentPrice">RentPrice</label>
-                        <input id="RentPrice" type="number" asp-for="Property.RentPrice" step="0.01"/>
+                        <input id="RentPrice" type="number" asp-for="Property.RentPrice" step="0.01" value="0"/>
                     </div>
                     
                     <div class="group-property">
                         <label id="SalePricelabel" for="SalePrice">SalePrice</label>
-                        <input id="SalePrice" type="number" asp-for="Property.SalePrice" step="0.01"/>
+                        <input id="SalePrice" type="number" asp-for="Property.SalePrice" step="0.01" value="0"/>
                     </div>
 
                     <div class="group-property">
                         <label id="Imageurllabel" for="Imageurl">Imageurl</label>
-                        <input id="Imageurl" type="text" asp-for="Property.Imageurl"/>
+                        <input class="Imageurl" id="Imageurl" data-preview="propertyimage" type="text" placeholder="Image URL" asp-for="Property.Imageurl"/>
                     </div>
 
                     <div class="group-property" for="">
@@ -124,7 +128,7 @@
                     </div>
                 </div>
 
-                <img id="property-image" src="../IMG/Home/Home.png" />
+                <img id="propertyimage" src="../IMG/Home/Home.png" />
 
             </div>
 
@@ -135,8 +139,20 @@
                    roomTypeOptions += $"<option id=\"RoomTypes-{@type.RoomTypeID}-ids\" value=\"{@type.RoomTypeID}\"> {@type.RoomTypeName} </option>";
                 }
             }
+
+            <div id="RoomTypeOptions" hidden>
+                @foreach (var type in Model?.Dropdown?.RoomType ?? Enumerable.Empty<RoomType>())
+                {
+                    <option id="optionroomtype-@type.RoomTypeID-ids" value="@type.RoomTypeID">
+                        @type.RoomTypeName
+                    </option>
+                }
+            </div>
+
+            <script> setvaluetproomytypeoptions(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(@roomTypeOptions))); </script>
+            
             <div id="property-edit-room" class="property-edit-rooms">
-                <button type="button" id="btnAddRoom" onclick="addroom('@roomTypeOptions');">
+                <button type="button" id="btnAddRoom" onclick="addroom();">
                     Add Room
                 </button>
                 
