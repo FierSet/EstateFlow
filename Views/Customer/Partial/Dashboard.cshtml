@@ -16,7 +16,7 @@
                     @foreach(Propertycount prop in Model.Propertiescount ?? Enumerable.Empty<Propertycount>())
                     {
                         <span>
-                            <span id="optionroomtype-@prop.PropertyTypeID"></span>
+                            <span id="PropertyType-@prop.PropertyTypeID"></span>
                             <span id="totalptoprty">: @prop.TOTAL</span>
                         </span>
                     }

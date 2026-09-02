@@ -109,33 +109,24 @@
 
         var listbase = document.getElementById('customer-interfacelist');
 
-
         var listdeployment = [
             ['Profile', '<i class="fa-regular fa-address-book"></i>'],
             ['Dashboard', '<i class="fa-solid fa-gauge"></i>'],
+            ['Lease', '<i class="fa-solid fa-house"></i>'],
             ['My-Properties', '<i class="fa-solid fa-house"></i>'],
             ['Payments', '<i class="fa-solid fa-file-contract"></i>'],
             ['Maintenance', '<i class="fa-solid fa-wrench"></i>'],
             ['Settings', '<i class="fa-solid fa-gear"></i>']
         ];
-
+        var idlist = [];
         listdeployment.map(element => {
             listbase.innerHTML += `<li class="elementlist" id='${element[0]}-li'> 
                     ${element[1]} 
-                    <a id='${element[0].replace("-li", "")}'></a> 
+                    <a id='${element[0]}'>A</a> 
                 </li>`;
+            idlist.push(element[0]);
         });
-        getindexlabel(
-            [
-            'My-Portal',
-            'Profile',
-            'Dashboard',
-            'My-Properties',
-            'Payments',
-            'Maintenance',
-            'Settings',
-            'Logout'
-            ]);
+        getindexlabel(idlist);
     }
 
     function loadpartialbyinteface(partialcall)

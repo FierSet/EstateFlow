@@ -11,6 +11,11 @@ public class HomeController : Controller
         return View();
     }
 
+    private string Database_endpoind()
+    {
+        return $"{Request.Scheme}://{Request.Host}";
+    }
+
     public IActionResult ChangePartial(string partialName)
     {
         return PartialView(partialName);
@@ -25,10 +30,9 @@ public class HomeController : Controller
     public async Task<IActionResult> Loggin([FromBody] Usersingin user)
     {
         var client = new HttpClient();
-        string baseUrl = $"{Request.Scheme}://{Request.Host}";
 
         var response = await client.PostAsJsonAsync(
-            $"{baseUrl}/api/Database/Signin",
+            $"{Database_endpoind()}/api/Database/Signin",
             user
         );
         string result = await response.Content.ReadAsStringAsync();
@@ -55,10 +59,9 @@ public class HomeController : Controller
     public async Task<IActionResult> Signup([FromBody] Usersingin user)
     {
         var client = new HttpClient();
-        string baseUrl = $"{Request.Scheme}://{Request.Host}";
 
         var response = await client.PostAsJsonAsync(
-            $"{baseUrl}/api/Database/Signup",
+            $"{Database_endpoind()}/api/Database/Signup",
             user
         );
 

@@ -53,8 +53,7 @@
 
                     <div class="group-property">
                         <label id="Countrylabel" for="Country">Country</label>
-                        <textarea id="Country" rows="2" cols="50" asp-for="Property.Country" required >
-                        </textarea>
+                        <input id="Country" asp-for="Property.Country" required />
                     </div>
                     
                     <div class="group-property">
@@ -123,7 +122,7 @@
                         <input class="Imageurl" id="Imageurl" data-preview="propertyimage" type="text" placeholder="Image URL" asp-for="Property.Imageurl"/>
                     </div>
 
-                    <div class="group-property" for="">
+                    <div class="group-property">
                         <button type="submit" class="button" id="Update-property">Update</button>
                     </div>
                 </div>

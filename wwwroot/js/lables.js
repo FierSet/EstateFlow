@@ -96,7 +96,8 @@ var indexlabel = {
     'total-rowslabel': 98,
     'emptpropertylistmessage': 100,
     'newproperty': 101,
-    'toggle-tolist': 102
+    'toggle-tolist': 102,
+    'Lease': 104
     
 }
 
@@ -130,6 +131,7 @@ function SetFlagCountry(lang)
     const arrowSvg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'><path fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 0 1 1.08 1.04l-4.25 4.25a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06z' clip-rule='evenodd'/></svg>`;
     inputtextlanguage.style.backgroundImage = "";
     inputtextlanguage.style.backgroundImage = `url("https://flagsapi.com/${getFlagCountry(lang)}/flat/64.png"), url("data:image/svg+xml,${encodeURIComponent(arrowSvg)}")`;
+    document.documentElement.setAttribute('lang', getFlagCountry(lang).toLowerCase());
 }
 
 

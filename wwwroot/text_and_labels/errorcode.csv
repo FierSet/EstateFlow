@@ -1,0 +1,31 @@
+index,English,Spanish
+1,Password don't match,Las contraseñas no coinciden
+2,Email format not valid,formato de email no valido
+3,Email or Password Empty,Email o Password vacio
+4,User already exist,El usuario ya existe
+5,Can't create user,No se pudo crear el usuario
+6,User Created,Usuario creado
+7,User dont exist,El usuario no existe
+8,baned user,Usuario bloqueado
+9,Loggin success,Inicio exitoso
+10,User or Password is incorrect,Usuario o contraseña incorrectos
+11,Account error. Please reloggin,Error de cuenta. Por favor reingresa a la cuneta
+12,Change Password,Cambiar contraseña
+13,Error to connet to database,Error al conectar a la base de datos
+14,Requiere first name,Se requiere el primer nombre
+15,Requiere second name,Se requiere el segundo nombre
+16,Requiere mothers name,Se requiere el apellido materno
+17,Requiere fathers name,Se requiere el apellido paterno
+18,Email is requier,Se requiere el email
+19,Phone is requiere,Se requiere numero de telefono
+20,Invalid format,Formato invalido
+21,The password is requier,La contraseña es necesaria
+22,The password must match to the first password,The password is requier
+23,Data not updated,Datos no actualizados
+24,Updated successfull,Actualizacion con exito
+25,Password updated,Contraseña Actualizada
+26,Owner Error. you aren´t an ouwner,Error de propietario. No eres el propietario
+27,Property added,Propiedad agregada
+28,Property updated,Propiedad actualizada
+29,Property Not updated,propiedad No actualizada
+30,Not found properties,No se encontraron propiedades

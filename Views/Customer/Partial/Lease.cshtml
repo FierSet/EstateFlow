@@ -1,0 +1,55 @@
+@model Lease
+<div class ="lease-base">
+
+    <span id="lease-title"></span>
+    <span id="lease-anouncement"></span>
+
+    <div id="interface-lease">
+        <button id="new-lease"> New Lease</button>
+    </div>
+
+    <div id="main-lease" class="main-lease">
+        <div id="lease-list" class="lease-list">
+            RentID INT IDENTITY(1,1) PRIMARY KEY,
+            propertyID INT NOT NULL,
+            Lordland INT NOT NULL,
+            TenantID INT NOT NULL,
+            GuarantorID INT NOT NULL,
+            StartDate DATE NOT NULL,
+            EndDate DATE NOT NULL,
+            GuaranteeAmount MONEY NOT NULL,
+            MonthlyRent MONEY NOT NULL,
+            EvidenceID INT NOT NULL,
+        </div>
+
+        <div id="create-lease" class="create-lease hide">
+
+            <div class="property-list-tolease-base">
+                <span id="text-property-to-lease">Chose a property</span>
+
+                <div id="property-list-tolease" class="properties-list-tolease">
+                </div>
+
+            </div>
+            <div id="creating-lease" class="creating-lease hide">
+                
+                <form id="form-creating-lease" class="form-creating-lease">
+                    <input id="ID" type="hidden" asp-for="Usercreids.ID" />
+                    <div class="group-lease">
+                        <span id="ownernamelabel">Owner: </span> </><span id="ownername">Name</span>
+                        <span id="owneremail">@Model?.Usercreids?.Email</span>
+                    </div>
+
+                    <div class="group-lease">
+                        
+                    </div>
+
+                    <label id="tenant-curp"></label>
+                    
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

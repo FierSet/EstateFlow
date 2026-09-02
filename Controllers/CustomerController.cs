@@ -12,7 +12,12 @@ public class CustomerController : Controller
         Partialselect = new PartialSelected { PartialName = "Dashboard"},
     };
 
-    public IActionResult Index(Messagecode Messagecode, string partialName = "Dashboard")
+    private string Database_endpoind()
+    {
+        return $"{Request.Scheme}://{Request.Host}";
+    }
+
+    public IActionResult Index(Messagecode Messagecode, string partialName = "Lease")
     {   
         _Parameter?.Partialselect?.PartialName = partialName;
         _Parameter?.Messagecode?.Code = Messagecode.Code;
@@ -37,6 +42,7 @@ public class CustomerController : Controller
             { "Profile", async () => await Getuserdata() },
             { "Dashboard", async () => await getdashboard() },
             { "My-Properties", async () => await Getpropertys() },
+            {"Lease", async () => await GetdaLease() },
             { "Payments", async () => "1234" },
             { "Maintenance", async () => "1234" },
             { "Settings", async () => "1234" } 
@@ -45,6 +51,24 @@ public class CustomerController : Controller
         var Model = await GetModel[partialName]();
 
         return PartialView("./partial/" + partialName, Model);
+    }
+
+    public async Task<Lease> GetdaLease()
+    {
+        string? ID = HttpContext.Session.GetString("ID");
+        string? Email = HttpContext.Session.GetString("Email");
+
+        //var client = new HttpClient();
+
+        Lease lease = new Lease();
+
+        lease.Usercreids = new Usercreids()
+        {
+            ID = int.Parse(ID?.ToString() ?? ""),
+            Email = Email?.ToString() ?? "",
+        };
+
+        return lease ?? new Lease();
     }
 
     public async Task<Dashboard> getdashboard()
@@ -59,10 +83,9 @@ public class CustomerController : Controller
         };
 
         var client = new HttpClient();
-        string baseUrl = $"{Request.Scheme}://{Request.Host}";
 
         var response = await client.PostAsJsonAsync(
-            $"{baseUrl}/api/Database/Load_dashboard",
+            $"{Database_endpoind()}/api/Database/Load_dashboard",
             user
         );
 
@@ -89,10 +112,9 @@ public class CustomerController : Controller
     public async Task<Propertys> Getpropertys()
     {
         var client = new HttpClient();
-        string baseUrl = $"{Request.Scheme}://{Request.Host}";
         
         var response = await client.GetAsync(
-            $"{baseUrl}/api/Database/Property_list_Parameters"
+            $"{Database_endpoind()}/api/Database/Property_list_Parameters"
         );
 
         string result = await response.Content.ReadAsStringAsync();
@@ -170,10 +192,9 @@ public class CustomerController : Controller
         };
         
         var client = new HttpClient();
-        string baseUrl = $"{Request.Scheme}://{Request.Host}";
 
         var response = await client.PostAsJsonAsync(
-            $"{baseUrl}/api/Database/Loaddatauser",
+            $"{Database_endpoind()}/api/Database/Loaddatauser",
             user
         );
 

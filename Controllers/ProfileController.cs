@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RealStateManagementWebapp.Models;
 using System.Text.Json.Nodes;
-using System.Text.Json;
 
 namespace RealStateManagementWebapp.Controllers;
 
