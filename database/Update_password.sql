@@ -3,8 +3,9 @@ CREATE OR ALTER PROCEDURE Update_password
 AS
 BEGIN
 	
-	DECLARE @Email VARCHAR(255) = JSON_VALUE(@json, '$.Email');
-	DECLARE @NewPassword NVARCHAR(255) = JSON_VALUE(@json, '$.Password');
+	DECLARE @Email VARCHAR(255) = JSON_VALUE(@json, '$.user.Email');
+	DECLARE @NewPassword NVARCHAR(255) = JSON_VALUE(@json, '$.user.Password');
+    DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.token.Password');
 
 	DECLARE @errormessage NVARCHAR(max) = 
     '
@@ -28,6 +29,10 @@ BEGIN
         {
             "code": 22,
             "message": "user found"
+        },
+        {
+            "code": 105,
+            "message" : "Session expire"
         }
       ]';
 	
@@ -59,6 +64,21 @@ BEGIN
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
 
         RETURN;
+    END
+
+    IF DATEDIFF(MINUTE, (SELECT DateUpdate from UserLoginToken WHERE UserID = (SELECT UserID FROM users WHERE Email = @Email) AND Tocken = @Tocken), SYSUTCDATETIME()) > (SELECT ValidationTime FROM UserLoginTockenvalidatetime)
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
     END
 
     BEGIN TRY

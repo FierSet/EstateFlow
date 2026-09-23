@@ -1,4 +1,4 @@
---CREATE DATABASE Realstatesmanager;
+SPO--CREATE DATABASE Realstatesmanager;
 
 USE Realstatesmanager;
 
@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS STATUS;
 DROP TABLE IF EXISTS PropertyType;
 DROP TABLE IF EXISTS User_fiscal_info;
 DROP TABLE IF EXISTS TaxIDType;
+DROP TABLE IF EXISTS UserLoginTockenvalidatetime;
+DROP TABLE IF EXISTS UserLoginToken;
 
 
 
@@ -47,6 +49,19 @@ CREATE TABLE users ( -- This table stores information about the users of the sys
 
     FOREIGN KEY (Role) REFERENCES Role(role_id)
 ); --Insert into users (FirstName, SecondName, fathersName, mothersName, Email, Phone, PasswordHash, Role, IsActive) values ('Admin', 'Admin', 'Admin','Admin', 'admin@example.com', '1234567890', 'adminpasswordhash', 1, 1);
+
+CREATE TABLE UserLoginToken ( -- This table stores login tokens for users, which can be used for authentication and session management. Each token has a unique identifier, is associated with a specific user, and has a unique token value.
+     UserID INT PRIMARY KEY,
+     Tocken VARCHAR(255) NOT NULL UNIQUE DEFAULT 0,
+     DateUpdate DATETIME2 DEFAULT SYSUTCDATETIME(),
+
+     FOREIGN KEY (UserID) REFERENCES users(UserID)
+);
+
+CREATE TABLE UserLoginTockenvalidatetime(-- this table stores the validation time for user login tokens, which determines how long a token is valid before it expires. Each record has a unique identifier and a validation time in minutes.
+    ValidationTime INT,
+);
+INSERT INTO UserLoginTockenvalidatetime (ValidationTime) VALUES (720); -- 720 minutes = 12 hours
 
 create table TaxIDType ( -- This table defines the different types of tax identification numbers that users can have, such as Social Security Number (SSN), Employer Identification Number (EIN), and Tax Identification Number (TIN). Each type has a unique identifier, a country associated with it, and a name.
     TaxIDTypeID INT IDENTITY(1,1) PRIMARY KEY,

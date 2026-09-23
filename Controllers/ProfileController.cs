@@ -83,6 +83,7 @@ public class ProfileController : Controller
         var json = JsonNode.Parse(result);
         var jsoncode = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
 
+        HttpContext.Session.SetString("Tocken", json?["tocken"]?.ToString() ?? "");
 
         routeValues["messagecode.Code"] = jsoncode?["code"];
         routeValues["messagecode.Message"] = jsoncode?["message"];

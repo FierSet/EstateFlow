@@ -58,7 +58,7 @@ BEGIN
 
     BEGIN try
         BEGIN TRANSACTION;
-
+        
         INSERT INTO users (Email, PasswordHash, Role, IsActive) 
               values (@Email, @Password, 1, 0);
 

@@ -85,6 +85,8 @@ public class DatabaseController : ControllerBase
                         user.Password ?? string.Empty
                 );
 
+                //Console.WriteLine($"TOCKEN verification result: {jsonarray?["Tocken"]}");
+
                 if(matchpassword == PasswordVerificationResult.Success)
                 {
                     var results = new
@@ -92,6 +94,7 @@ public class DatabaseController : ControllerBase
                         code = 22,
                         message = "Login success",
                         UserID = jsonarray?["UserID"],
+                        Tocken = jsonarray?["Tocken"],
                         FirstName = jsonarray?["FirstName"],
                         FathersName = jsonarray?["FathersName"],
                         AvatarImage = jsonarray?["AvatarImage"],
@@ -219,6 +222,7 @@ public class DatabaseController : ControllerBase
     {
         try
         {
+            //loginin to verifield the password____________________________________________
             var client = new HttpClient();
 
             string tojson = JsonSerializer.Serialize(dataupdated);
@@ -234,16 +238,18 @@ public class DatabaseController : ControllerBase
                 $"{baseUrl}/api/Database/Signin",
                 user
             );
-
+            
             string result = await response.Content.ReadAsStringAsync();
 
-             var json = JsonNode.Parse(result);
+            var json = JsonNode.Parse(result);
             var jsoncode = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
 
             if(jsoncode?["code"]?.ToString() != "22")
             {
                 return Ok(new {Status = 200, jsonresponse = jsoncode });
             }
+            //_____________________________________________________________________________
+
             var storeprocedure = "Update_password";
 
             var passwordHasher = new PasswordHasher<IdentityUser>();
@@ -254,8 +260,8 @@ public class DatabaseController : ControllerBase
                 );
             
             user.Password = haspassword;
-
-            string Passwordjson = JsonSerializer.Serialize(user);
+            
+            string Passwordjson = JsonSerializer.Serialize(new { user, token = jsoncode["Tocken"]?.ToString() });
             var connection = _context.Database.GetDbConnection();
             if (connection.State == ConnectionState.Closed)
                 await connection.OpenAsync();
@@ -268,7 +274,7 @@ public class DatabaseController : ControllerBase
             var responsepasw = await command.ExecuteScalarAsync();
             //string? resultpassword = jsonpassword != DBNull.Value ? jsonpassword?.ToString() : "{}";
 
-            return Ok(new {Status = 200, jsonresponse = responsepasw });
+            return Ok(new {Status = 200, jsonresponse = responsepasw, Tocken = jsoncode["Tocken"]?.ToString() });
         }
         catch (Exception ex)
         {

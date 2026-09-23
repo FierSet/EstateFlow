@@ -70,16 +70,40 @@ BEGIN
 
         RETURN;
     END
-
+    
     BEGIN TRY
+        BEGIN TRANSACTION;
 
-        SELECT UserID, FirstName, FathersName, Email, PasswordHash, IsActive, Role, AvatarImage from users 
+        DECLARE @Token VARCHAR(255) = LEFT(REPLACE(CONVERT(VARCHAR(36), NEWID()), '-', ''), 10);
+
+        DECLARE @UserToken NVARCHAR(255) = (SELECT Tocken from UserLoginToken WHERE UserID = (SELECT UserID from users WHERE Email = @Email));
+
+        IF (@UserToken) IS NULL
+        BEGIN
+            INSERT INTO UserLoginToken (UserID, Tocken) VALUES 
+            ( (SELECT UserID from users WHERE Email = @Email), @Token );
+        END
+        ELSE
+        BEGIN
+            UPDATE UserLoginToken SET Tocken = @Token, DateUpdate = SYSUTCDATETIME()  
+            WHERE UserID = (SELECT UserID from users WHERE Email = @Email);
+        END
+
+        SELECT 
+            U.UserID, U.FirstName, U.FathersName, U.Email, U.PasswordHash, U.IsActive, U.Role, U.AvatarImage, UT.Tocken
+        FROM users U
+        INNER JOIN UserLoginToken UT ON U.UserID = UT.UserID
         WHERE Email = @Email
         FOR JSON PATH;
 
+        COMMIT TRANSACTION;
+        RETURN;
     END TRY
     BEGIN CATCH
         
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+
         SELECT code, message
         FROM OPENJSON(@ErrorMessage)
             WITH
@@ -95,6 +119,8 @@ END
 
 --SELECT * FROM users;
 
+--SELECT * FROM UserLoginToken;
+
 --delete from users;
 
---exec Singin '{"Email": "admin@example.com", "Password": "123"}';
+--exec Singin '{"Email": "admin@example.com", "Password": "AQAAAAIAAYagAAAAEDcBLGx7qXUkgQYyKn/vKYeGL9MZjIVzWI0b9tPM7watOAzUVnHt852IDesA7Dvhsg=="}';

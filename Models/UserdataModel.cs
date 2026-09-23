@@ -6,6 +6,7 @@ public class Usercreids
 {
     public int? ID {get; set;}
     public string? Email {get; set;}
+    public string? Tocken {get; set;}
     public bool IsActive {get; set;}
 }
 

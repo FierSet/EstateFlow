@@ -45,6 +45,7 @@ public class HomeController : Controller
             if (userjson?["UserID"] != null)
             {
                 HttpContext.Session.SetString("ID", userjson?["UserID"]?.ToString() ?? "");
+                HttpContext.Session.SetString("Tocken", userjson?["Tocken"]?.ToString() ?? "");
                 HttpContext.Session.SetString("Email", userjson?["Email"]?.ToString() ?? "");
                 HttpContext.Session.SetString("IsActive", userjson?["IsActive"]?.ToString() ?? "0");
                 HttpContext.Session.SetString("Role", userjson?["Role"]?.ToString() ?? "1");

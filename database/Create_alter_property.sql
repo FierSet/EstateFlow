@@ -5,6 +5,7 @@ BEGIN
 	
 	DECLARE @ID INT = JSON_VALUE(@json, '$.Usercreids.ID');
 	DECLARE @Email NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Email');
+    DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Tocken');
     DECLARE @Property NVARCHAR(max) = JSON_VALUE(@json, '$.Property');
     DECLARE @PropertyID NVARCHAR(max) = JSON_VALUE(@json, '$.Property.PropertyID');
     DECLARE @Rooms NVARCHAR(max) = JSON_VALUE(@json, '$.Property.Rooms');
@@ -31,6 +32,10 @@ BEGIN
 		{
             "code": 99,
             "message" : "Property Not updated"
+        },
+        {
+            "code": 105,
+            "message" : "Session expire"
         }]';
 	
 	IF NOT EXISTS(SELECT 1 FROM users WHERE Email = @Email AND UserID = @ID)
@@ -48,6 +53,21 @@ BEGIN
 
 		RETURN;
 	END
+
+    IF DATEDIFF(MINUTE, (SELECT DateUpdate from UserLoginToken WHERE UserID = @ID AND Tocken = @Tocken), SYSUTCDATETIME()) > (SELECT ValidationTime FROM UserLoginTockenvalidatetime)
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
 
     BEGIN TRY   
 
@@ -231,7 +251,7 @@ BEGIN
     
 END
 
---select * from ROOMS;
+--select * from UserLoginToken;
 
 /*
 EXEC Create_alter_property '{
