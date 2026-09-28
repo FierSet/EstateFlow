@@ -17,6 +17,19 @@ public class CustomerController : Controller
         return $"{Request.Scheme}://{Request.Host}";
     }
 
+    private Usercreids Usercreids()
+    {
+        
+        return new Usercreids()
+        {
+            ID = int.Parse(HttpContext.Session.GetString("ID") ?? "0"),
+            Email = HttpContext.Session.GetString("Email") ?? "",
+            Tocken = HttpContext.Session.GetString("Tocken") ?? "",
+            IsActive = bool.Parse(HttpContext.Session.GetString("IsActive") ?? "false")
+        };
+        
+    }
+
     public IActionResult Index(Messagecode Messagecode, string partialName = "Lease")
     {   
         _Parameter?.Partialselect?.PartialName = partialName;
@@ -26,6 +39,13 @@ public class CustomerController : Controller
         if (string.IsNullOrEmpty(HttpContext.Session.GetString("ID"))) 
             return RedirectToAction("Index", "Home");
 
+        if(_Parameter?.Messagecode?.Code == 105)
+        {
+            return RedirectToAction(
+                "Index",
+                "Home",
+                new { alertMessage = "Your session has expired. Please log in again." });
+        }
         if(!bool.Parse(HttpContext.Session.GetString("IsActive") ?? "false"))
             _Parameter?.Partialselect?.PartialName = "Profile";
         
@@ -34,10 +54,8 @@ public class CustomerController : Controller
 
     public async Task<IActionResult> ChangePartial(string partialName)
     {
-        if (string.IsNullOrEmpty(HttpContext.Session.GetString("ID"))) 
-            return RedirectToAction("Index", "Home");
 
-        var  GetModel = new Dictionary<string, Func<Task<object>>> 
+        var  GetModel = new Dictionary<string, Func<Task<object?>>> 
         { 
             { "Profile", async () => await Getuserdata() },
             { "Dashboard", async () => await getdashboard() },
@@ -50,43 +68,39 @@ public class CustomerController : Controller
 
         var Model = await GetModel[partialName]();
 
+        if (Model == null)
+        {
+            return Json(new
+            {
+                redirect = Url.Action(
+                    "Index",
+                    "Home",
+                new { alertMessage = "Your session has expired. Please log in again." })
+            });
+        }
+        //Console.WriteLine("Model: " + JsonSerializer.Serialize(Model).ToString());
         return PartialView("./partial/" + partialName, Model);
     }
 
     public async Task<Lease> GetdaLease()
     {
-        string? ID = HttpContext.Session.GetString("ID");
-        string? Email = HttpContext.Session.GetString("Email");
-
         //var client = new HttpClient();
 
         Lease lease = new Lease();
 
-        lease.Usercreids = new Usercreids()
-        {
-            ID = int.Parse(ID?.ToString() ?? ""),
-            Email = Email?.ToString() ?? "",
-        };
+        lease.Usercreids = Usercreids();
 
         return lease ?? new Lease();
     }
 
     public async Task<Dashboard> getdashboard()
     {
-        string? ID = HttpContext.Session.GetString("ID");
-        string? Email = HttpContext.Session.GetString("Email");
-
-        Usercreids user = new()
-        {
-            ID = int.Parse(ID?.ToString() ?? ""),
-            Email = Email?.ToString() ?? "",
-        };
 
         var client = new HttpClient();
 
         var response = await client.PostAsJsonAsync(
             $"{Database_endpoind()}/api/Database/Load_dashboard",
-            user
+            Usercreids()
         );
 
         string result = await response.Content.ReadAsStringAsync();
@@ -109,7 +123,7 @@ public class CustomerController : Controller
         return dashboard ?? new Dashboard();//propertys ?? new Propertys();
     }
 
-    public async Task<Propertys> Getpropertys()
+    public async Task<Propertys?> Getpropertys()
     {
         var client = new HttpClient();
         
@@ -129,15 +143,7 @@ public class CustomerController : Controller
 
         Propertys propertys = new ();
 
-        propertys.Usercreids = new Usercreids()
-        {
-            ID = int.Parse(HttpContext.Session.GetString("ID") ?? ""),
-            Email = HttpContext.Session.GetString("Email") ?? "",
-            IsActive = bool.Parse(HttpContext.Session.GetString("IsActive")?.ToString() ?? "false")
-        };
-
-        //propertys?.Usercreids?.ID =  int.Parse(HttpContext.Session.GetString("ID") ?? "");
-        //propertys?.Usercreids?.Email = HttpContext.Session.GetString("Email");
+        propertys.Usercreids = Usercreids();
 
         foreach(var prop in PropertyType?.AsArray() ?? [])
         {
@@ -175,45 +181,36 @@ public class CustomerController : Controller
             });
         }
 
-        //Console.WriteLine(JsonSerializer.Serialize(propertys.Dropdown).ToString());
+        //Console.WriteLine(JsonSerializer.Serialize(propertys).ToString());
 
         return propertys ?? new Propertys();
     }
 
-    public async Task<Dataupdated> Getuserdata()
+    public async Task<Dataupdated?> Getuserdata()
     {
-        string? ID = HttpContext.Session.GetString("ID");
-        string? Email = HttpContext.Session.GetString("Email");
-
-        Usercreids user = new()
-        {
-            ID = int.Parse(ID?.ToString() ?? ""),
-            Email = Email?.ToString() ?? "",
-        };
-        
         var client = new HttpClient();
 
         var response = await client.PostAsJsonAsync(
             $"{Database_endpoind()}/api/Database/Loaddatauser",
-            user
+            Usercreids()
         );
 
         string result = await response.Content.ReadAsStringAsync();
         var json = JsonNode.Parse(result);
-        var userjson = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
-        var users = JsonNode.Parse(userjson?["Users"]?.ToString() ?? "{}");
 
-        //Console.WriteLine("USER JSON: " + users?.ToString());
-       
+        var userjson = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
+
+        if (userjson?["code"]?.ToString() == "105")
+        {
+            HttpContext.Session.Clear();
+            return null;
+        }
+
+        var users = JsonNode.Parse(userjson?["Users"]?.ToString() ?? "{}");
 
         Dataupdated dataupdated = new()
         {
-            Usercreids = new Usercreids
-            {
-                ID = int.Parse(users?["UserID"]?.ToString() ?? ""),
-                Email = users?["Email"]?.ToString() ?? "",
-                IsActive = bool.Parse(users?["IsActive"]?.ToString() ?? "false")
-            },
+            Usercreids = Usercreids(),
             Userdata = new Userdata
             {
                 FirstName = users?["FirstName"]?.ToString() ?? "",

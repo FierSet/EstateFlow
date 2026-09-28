@@ -2,6 +2,13 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if(TempData["AlertMessage"] != null)
+{
+    <script>
+        alert('@TempData["AlertMessage"]');
+    </script>
+}
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
         <div class="container-fluid">

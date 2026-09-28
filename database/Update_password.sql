@@ -5,7 +5,7 @@ BEGIN
 	
 	DECLARE @Email VARCHAR(255) = JSON_VALUE(@json, '$.user.Email');
 	DECLARE @NewPassword NVARCHAR(255) = JSON_VALUE(@json, '$.user.Password');
-    DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.token.Password');
+    DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.token');
 
 	DECLARE @errormessage NVARCHAR(max) = 
     '
@@ -35,6 +35,29 @@ BEGIN
             "message" : "Session expire"
         }
       ]';
+
+    --tocken validation____________________________________________________________________________________________________________
+    DECLARE @UserID INT = (SELECT UserID FROM users WHERE Email = @Email);
+    DECLARE @TokenDateUpdate DATETIME = (SELECT DateUpdate FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @TokenExists VARCHAR(255) = (SELECT Tocken FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @ValidationTime INT = (SELECT ValidationTime FROM UserLoginTockenvalidatetime);
+
+    IF DATEDIFF(MINUTE, (@TokenDateUpdate), SYSUTCDATETIME()) >= (@ValidationTime) OR
+      (@TokenExists) IS NULL
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
+    --tocken validation____________________________________________________________________________________________________________
 	
 	IF @Email IS NULL OR @NewPassword IS NULL
     BEGIN
@@ -64,21 +87,6 @@ BEGIN
         FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
 
         RETURN;
-    END
-
-    IF DATEDIFF(MINUTE, (SELECT DateUpdate from UserLoginToken WHERE UserID = (SELECT UserID FROM users WHERE Email = @Email) AND Tocken = @Tocken), SYSUTCDATETIME()) > (SELECT ValidationTime FROM UserLoginTockenvalidatetime)
-    BEGIN
-        SELECT code, message
-        FROM OPENJSON(@ErrorMessage)
-            WITH
-            (
-                code INT,
-                message NVARCHAR(255)
-            )
-        WHERE code = 105
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
-
-		RETURN;
     END
 
     BEGIN TRY
@@ -123,4 +131,5 @@ BEGIN
 
 END
 
---exec Update_password '{"Email":"admin@example.com","Password":"AQAAAAIAAYagAAAAEJFXI\u002BNblvEmm4NsVaPx\u002BhR8Z7GcJdKwjyayjX0cwE2je3KS4IS0u5QE2cIWjk4AnA=="}';
+--exec Update_password '{"user":{"Email":"admin@example.com","Password":"AQAAAAIAAYagAAAAEOV0bk/YWCriyn7TIEcF1q3n91k7sIA/645h2nB25dnQJrkFgqN6dIvR9vdtCT/pMA=="}, "token":"9618F0EEB9" }';
+--SELECT * FROM UserLoginToken;

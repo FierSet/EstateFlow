@@ -5,6 +5,8 @@ BEGIN
 	
 	DECLARE @ID INT = JSON_VALUE(@json, '$.Usercreids.ID');
 	DECLARE @Email NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Email');
+	DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Tocken');
+
 	DECLARE @FirstName NVARCHAR(255) = JSON_VALUE(@json, '$.Userdata.FirstName');
 	DECLARE @SecondName NVARCHAR(255) = JSON_VALUE(@json, '$.Userdata.SecondName');
 	DECLARE @FathersName NVARCHAR(255) = JSON_VALUE(@json, '$.Userdata.FathersName');
@@ -26,6 +28,10 @@ BEGIN
 		{
             "code": 56,
             "message" : "Updated successfull"
+        },
+        {
+            "code": 105,
+            "message" : "Session expire"
         }]';
 	
 	IF NOT EXISTS(SELECT 1 FROM users WHERE Email = @Email AND UserID = @ID)
@@ -44,6 +50,28 @@ BEGIN
 		RETURN;
 	END
 
+	--tocken validation____________________________________________________________________________________________________________
+    DECLARE @UserID INT = @ID;
+    DECLARE @TokenDateUpdate DATETIME = (SELECT DateUpdate FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @TokenExists VARCHAR(255) = (SELECT Tocken FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @ValidationTime INT = (SELECT ValidationTime FROM UserLoginTockenvalidatetime);
+
+    IF DATEDIFF(MINUTE, (@TokenDateUpdate), SYSUTCDATETIME()) >= (@ValidationTime) OR
+      (@TokenExists) IS NULL
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
+    --tocken validation____________________________________________________________________________________________________________
 	
 	BEGIN TRY
 		BEGIN TRANSACTION;

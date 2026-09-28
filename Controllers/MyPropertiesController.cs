@@ -37,10 +37,7 @@ public class MyPropertiesController : Controller
 
             var jsoncode = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
 
-            routeValues["messagecode.Code"] = jsoncode?["code"];
-            routeValues["messagecode.Message"] = jsoncode?["message"];
-
-            return Content(JsonSerializer.Serialize(routeValues));//, routeValues);
+            return Content(JsonSerializer.Serialize(jsoncode));//, routeValues);
         }catch(Exception er)
         {
 
@@ -53,10 +50,8 @@ public class MyPropertiesController : Controller
      [HttpPost]
     public async Task<IActionResult> Loadproperties([FromBody] GetPropertieslist GetPropertieslist)
     {
-
          try
         {
-
             var client = new HttpClient();
 
             string baseUrl = $"{Request.Scheme}://{Request.Host}";

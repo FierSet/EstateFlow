@@ -3,11 +3,18 @@
 <div class="profile">
     
 
-    <form id="profileform" class="userdataform" asp-controller="Profile" asp-action="UpdateUserData" method="post"  onsubmit="return userdataform();">
+    <form id="profileform" class="userdataform" 
+    asp-controller="Profile"
+    asp-action="UpdateUserData"
+    method="post"  onsubmit="return userdataform();">
         <h1 id="profileh1">Profile</h1>
 
         <div class="group-userinfo">
             <div id="messagesuserdata">
+                @if(Model == null)
+                {
+                        <script>window.location.reload();</script>
+                }
                 @if(Model?.Usercreids?.IsActive == false) { <p id='singin-message-error'>Please add your basic information to active the account.</p> }
             </div>
         </div>
@@ -64,7 +71,7 @@
     <div class="tax-data">
         <h2 id="TaxDatah2">Tax Data</h2>
         <ul>
-            @if(Model.Taxdatas == null || !Model.Taxdatas.Any())
+            @if(Model?.Taxdatas == null || !Model.Taxdatas.Any())
             {
                 <li>No tax data available.</li>
             }

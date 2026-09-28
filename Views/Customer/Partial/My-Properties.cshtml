@@ -2,6 +2,12 @@
 
 <div class="propeties">
 
+    <div id="usercredentials">
+        <input id="ID" type="hidden" asp-for="Usercreids.ID" />
+        <input id="Email" type="hidden" asp-for="Usercreids.Email" />
+        <input id="Tocken" type="hidden" asp-for="Usercreids.Tocken" />
+    </div>
+
     <h1 id="properties-title">My-Properties</h1>
     <div id="property-message"></div>
     <button id="toggle-tolist" onclick="toggleshowproperty()">Create New property</button>
@@ -30,11 +36,7 @@
                     NEW
                 </button>
                 <Label id = "propertyTitlelabel">Property</Label> 
-                <div id="usercredentials">
-                    <input id="ID" type="hidden" asp-for="Usercreids.ID" />
-                    <input id="Email" type="hidden" asp-for="Usercreids.Email" />
-                    <input id="Tocken" type="hidden" asp-for="Usercreids.Tocken" />
-                </div>
+                
                 <div id="property-edit-property" class="property-edit-property">
                     <div class="group-property">
                         <label id="PropertyIDlabel" for="PropertyID">ID</label>

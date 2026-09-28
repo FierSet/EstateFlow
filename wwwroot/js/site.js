@@ -35,14 +35,30 @@ function ChangeLanguage(language)
 
 async function ChangeSinglePartial (partialfunc, partialPath, idtarget) 
 {
-    return fetch(`${partialfunc}=${partialPath}`)
-    .then(response => response.text())
-    .then(navHtml => 
-    {
+    try {
+        const response = await fetch(`${partialfunc}=${partialPath}`);
 
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+
+        if (contentType?.includes("application/json")) {
+            const data = await response.json();
+
+            if (data.redirect) {
+                window.location.href = data.redirect;
+                return;
+            }
+        }
+
+        const navHtml = await response.text();
         document.getElementById(idtarget).innerHTML = navHtml;
 
-    }).catch(err => console.error("Error loading partial:", err));
+    } catch (err) {
+        console.error("Error loading partial:", err);
+    }
 }
 
 function IsValidEmail(Email)

@@ -5,6 +5,7 @@ BEGIN
     
     DECLARE @Email NVARCHAR(255) = JSON_VALUE(@JSON, '$.Email');
     DECLARE @Password NVARCHAR(255) = JSON_VALUE(@JSON, '$.Password');
+    DECLARE @IsLoggin BIT = JSON_VALUE(@JSON, '$.IsLoggin');
 
     DECLARE @errormessage NVARCHAR(max) = 
     '
@@ -74,19 +75,22 @@ BEGIN
     BEGIN TRY
         BEGIN TRANSACTION;
 
-        DECLARE @Token VARCHAR(255) = LEFT(REPLACE(CONVERT(VARCHAR(36), NEWID()), '-', ''), 10);
-
-        DECLARE @UserToken NVARCHAR(255) = (SELECT Tocken from UserLoginToken WHERE UserID = (SELECT UserID from users WHERE Email = @Email));
-
-        IF (@UserToken) IS NULL
+        IF @IsLoggin = 1 AND @IsLoggin IS NOT NULL -- If the user is logging in, generate a new token and update or insert it into the UserLoginToken table
         BEGIN
-            INSERT INTO UserLoginToken (UserID, Tocken) VALUES 
-            ( (SELECT UserID from users WHERE Email = @Email), @Token );
-        END
-        ELSE
-        BEGIN
-            UPDATE UserLoginToken SET Tocken = @Token, DateUpdate = SYSUTCDATETIME()  
-            WHERE UserID = (SELECT UserID from users WHERE Email = @Email);
+
+            DECLARE @Token VARCHAR(255) = LEFT(REPLACE(CONVERT(VARCHAR(36), NEWID()), '-', ''), 255);
+            DECLARE @UserToken NVARCHAR(255) = (SELECT Tocken from UserLoginToken WHERE UserID = (SELECT UserID from users WHERE Email = @Email));
+            IF (@UserToken) IS NULL
+            BEGIN
+                INSERT INTO UserLoginToken (UserID, Tocken) VALUES 
+                ( (SELECT UserID from users WHERE Email = @Email), @Token );
+            END
+            ELSE
+            BEGIN
+                UPDATE UserLoginToken SET Tocken = @Token, DateUpdate = SYSUTCDATETIME()  
+                WHERE UserID = (SELECT UserID from users WHERE Email = @Email);
+            END
+        
         END
 
         SELECT 

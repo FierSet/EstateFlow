@@ -2,7 +2,41 @@ CREATE OR ALTER PROCEDURE Load_properties
 @json NVARCHAR(max) = null
 AS
 BEGIN
+    DECLARE @ID INT = JSON_VALUE(@json, '$.Usercreids.ID');
+	DECLARE @Email NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Email');
+	DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@json, '$.Usercreids.Tocken');
 
+    DECLARE @errormessage NVARCHAR(max) = 
+    '
+    [
+        {
+            "code": 105,
+            "message" : "Session expire"
+        }
+      ]';
+
+    --tocken validation____________________________________________________________________________________________________________
+    DECLARE @UserID INT = @ID;
+    DECLARE @TokenDateUpdate DATETIME = (SELECT DateUpdate FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @TokenExists VARCHAR(255) = (SELECT Tocken FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @ValidationTime INT = (SELECT ValidationTime FROM UserLoginTockenvalidatetime);
+
+    IF DATEDIFF(MINUTE, (@TokenDateUpdate), SYSUTCDATETIME()) >= (@ValidationTime) OR
+      (@TokenExists) IS NULL
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
+    --tocken validation____________________________________________________________________________________________________________
     DECLARE @Page INT = JSON_VALUE(@json, '$.Page');
     DECLARE @PageSize INT = 4;
 
@@ -10,9 +44,9 @@ BEGIN
     (
         SELECT COUNT(*)
         FROM PropertyOwners
-        WHERE OwnerID = JSON_VALUE(@json, '$.Usercreids.ID')
+        WHERE OwnerID = @ID
     );
-
+    
     DECLARE @TotalPages INT = CEILING(CAST(@TotalRows AS FLOAT) / @PageSize);
 
     declare @pageinfor TABLE (Page INT, TotalPages INT, TotalRows INT);
@@ -53,7 +87,7 @@ BEGIN
 
             FROM Properties AS P
             RIGHT JOIN PropertyOwners PO ON PO.PropertyID = P.PropertyID
-	        WHERE PO.OwnerID = JSON_VALUE(@json, '$.Usercreids.ID')
+	        WHERE PO.OwnerID = @ID
             ORDER BY PropertyID DESC
             OFFSET (@Page - 1) * @PageSize ROWS
             FETCH NEXT @PageSize ROWS ONLY
@@ -68,8 +102,11 @@ END
 /*
 EXEC Load_properties '{
     "Usercreids": {
-        "ID": "1"
+        "ID": "1",
+        "Tocken": "B7B2C68B022B477FAE40F91207102F73"
     },
     "Page": 1
 }'
+
+SELECT * FROM UserLoginToken
 */

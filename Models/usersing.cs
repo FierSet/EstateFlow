@@ -9,4 +9,6 @@ public class Usersingin
 
     [Required]
     public string? Password {get; set;}
+
+    public bool IsLoggin {get; set;} = true;
 }

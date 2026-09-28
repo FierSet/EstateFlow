@@ -1,4 +1,4 @@
-SPO--CREATE DATABASE Realstatesmanager;
+--CREATE DATABASE Realstatesmanager;
 
 USE Realstatesmanager;
 

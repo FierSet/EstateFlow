@@ -55,8 +55,10 @@ public class DatabaseController : ControllerBase
             Usersingin userInstance = new Usersingin
             {
                 Email = user.Email,
-                Password = haspassword
+                Password = haspassword,
+                IsLoggin = user.IsLoggin
             };
+
             string tojson = JsonSerializer.Serialize(userInstance);
 
             var storeprocedure = "Singin";
@@ -194,7 +196,7 @@ public class DatabaseController : ControllerBase
         try
         {
             string tojson = JsonSerializer.Serialize(dataupdated);
-            
+            //Console.WriteLine("json: " + tojson.ToString());
             var storeprocedure = "update_userdata";
             var connection = _context.Database.GetDbConnection();
 
@@ -231,7 +233,8 @@ public class DatabaseController : ControllerBase
 
             Usersingin user = new Usersingin {
                 Email = dataupdated?.Usercreids?.Email,
-                Password =  dataupdated?.ChangePassword?.OldPassword
+                Password =  dataupdated?.ChangePassword?.OldPassword,
+                IsLoggin = false
             };
 
             var response = await client.PostAsJsonAsync(
@@ -262,6 +265,7 @@ public class DatabaseController : ControllerBase
             user.Password = haspassword;
             
             string Passwordjson = JsonSerializer.Serialize(new { user, token = jsoncode["Tocken"]?.ToString() });
+            //Console.WriteLine("json: " + Passwordjson.ToString());
             var connection = _context.Database.GetDbConnection();
             if (connection.State == ConnectionState.Closed)
                 await connection.OpenAsync();

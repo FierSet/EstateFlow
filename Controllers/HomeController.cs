@@ -6,9 +6,12 @@ namespace RealStateManagementWebapp.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+
+    public IActionResult Index(string? alertMessage = null)
     {
-        return View();
+        TempData["AlertMessage"] = alertMessage;
+
+        return View(TempData);
     }
 
     private string Database_endpoind()
@@ -40,13 +43,13 @@ public class HomeController : Controller
         var json = JsonNode.Parse(result);
        
         var userjson = JsonNode.Parse(json?["jsonresponse"]?.ToString() ?? "{}");
-
+        //Console.WriteLine("userjson: " + userjson?.ToString());
         if (userjson?["code"]?.ToString() == "22")
             if (userjson?["UserID"] != null)
             {
                 HttpContext.Session.SetString("ID", userjson?["UserID"]?.ToString() ?? "");
-                HttpContext.Session.SetString("Tocken", userjson?["Tocken"]?.ToString() ?? "");
                 HttpContext.Session.SetString("Email", userjson?["Email"]?.ToString() ?? "");
+                HttpContext.Session.SetString("Tocken", userjson?["Tocken"]?.ToString() ?? "");
                 HttpContext.Session.SetString("IsActive", userjson?["IsActive"]?.ToString() ?? "0");
                 HttpContext.Session.SetString("Role", userjson?["Role"]?.ToString() ?? "1");
                 HttpContext.Session.SetString("FirstName", userjson?["FirstName"]?.ToString() ?? "Leon");

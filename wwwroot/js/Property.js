@@ -8,6 +8,15 @@ var hidecreateproperty = true;
 var defaulthouseicon = "../IMG/Home/No_Imagen_House.png";
 var defaultroomicon = "../IMG/room/No_Imagen_Room.png";
 
+function checksession(jsonsession)
+{
+    if(jsonsession["code"] === 105)
+    {
+        const url = new URL("/Home", window.location.origin);
+        url.searchParams.set("alertMessage", "Your session has expired. Please log in again.");
+        window.location.href = url.toString();
+    }
+}
 function toggleshowproperty()
 {
     hidecreateproperty = !hidecreateproperty;
@@ -231,6 +240,7 @@ async function loadpropertyList(movement)
     propertyarray = [];
     var propertylist = document.getElementById('properties-list');
     var id = parseInt(document.getElementById("ID").value);
+    var tocken = document.getElementById("Tocken").value;
     var totalrows = document.getElementById("total-rows");
     var pagescount = document.getElementById("property-currentpage");
 
@@ -241,7 +251,8 @@ async function loadpropertyList(movement)
     propertylist.replaceChildren();
     var data = {
         "Usercreids": {
-            "ID": id
+            "ID": id,
+            "Tocken": tocken
         },
         "Page": page
     }
@@ -255,11 +266,14 @@ async function loadpropertyList(movement)
         })
         .then(response => response.json())
         .then(data => {
-             //console.log(data);
+            //console.log(data["code"]);
+            
             return data;
         });
+        
 
         var json = JSON.parse(response);
+        checksession(json);
         var PageInfo = JSON.parse(json["PageInfo"]);
         
         totalrows.textContent = PageInfo["TotalRows"];
@@ -402,10 +416,12 @@ async function uploadproperty()
         .then(response => response.json())
         .then(data => {
             
-            indexlabel['property-message'] = data['messagecode.Code'];
+            indexlabel['property-message'] = data['Code'];
             getindexlabel(['property-message']);
             return data;
         });
+
+        checksession(response);
         
         cleanpropertyedit();
         hidecreateproperty = !hidecreateproperty;

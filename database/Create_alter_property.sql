@@ -37,6 +37,29 @@ BEGIN
             "code": 105,
             "message" : "Session expire"
         }]';
+    
+    --tocken validation____________________________________________________________________________________________________________
+    DECLARE @UserID INT = @ID;
+    DECLARE @TokenDateUpdate DATETIME = (SELECT DateUpdate FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @TokenExists VARCHAR(255) = (SELECT Tocken FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @ValidationTime INT = (SELECT ValidationTime FROM UserLoginTockenvalidatetime);
+
+    IF DATEDIFF(MINUTE, (@TokenDateUpdate), SYSUTCDATETIME()) >= (@ValidationTime) OR
+      (@TokenExists) IS NULL
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
+    --tocken validation____________________________________________________________________________________________________________
 	
 	IF NOT EXISTS(SELECT 1 FROM users WHERE Email = @Email AND UserID = @ID)
 	BEGIN

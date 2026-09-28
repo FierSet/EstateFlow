@@ -4,6 +4,40 @@ AS
 BEGIN
 	DECLARE @ID INT = JSON_VALUE(@JSON, '$.ID');
 	DECLARE @Email NVARCHAR(255) = JSON_VALUE(@JSON, '$.Email');
+	DECLARE @Tocken NVARCHAR(255) = JSON_VALUE(@JSON, '$.Tocken');
+
+	DECLARE @errormessage NVARCHAR(max) = 
+    '
+    [
+        {
+            "code": 105,
+            "message" : "Session expire"
+        }
+      ]';
+
+	--tocken validation____________________________________________________________________________________________________________
+    DECLARE @UserID INT = @ID;
+    DECLARE @TokenDateUpdate DATETIME = (SELECT DateUpdate FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @TokenExists VARCHAR(255) = (SELECT Tocken FROM UserLoginToken WHERE UserID = @UserID AND Tocken = @Tocken);
+    DECLARE @ValidationTime INT = (SELECT ValidationTime FROM UserLoginTockenvalidatetime);
+
+    IF DATEDIFF(MINUTE, (@TokenDateUpdate), SYSUTCDATETIME()) >= (@ValidationTime) OR
+      (@TokenExists) IS NULL
+    BEGIN
+        SELECT code, message
+        FROM OPENJSON(@ErrorMessage)
+            WITH
+            (
+                code INT,
+                message NVARCHAR(255)
+            )
+        WHERE code = 105
+        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER;
+
+		RETURN;
+    END
+    --tocken validation____________________________________________________________________________________________________________
+	
 
 	SELECT
 	(
