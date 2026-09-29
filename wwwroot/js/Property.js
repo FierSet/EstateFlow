@@ -28,8 +28,8 @@ function showpropertycreation(IShidden)
    
     indexlabel["toggle-tolist"] = IShidden ? 102: 103;
     getindexlabel(["toggle-tolist"]);
-    const propertycreation = document.getElementById('upload-edid-property').hidden = IShidden;
-    const propertylist = document.getElementById('property-list').hidden = !IShidden;
+    document.getElementById('upload-edid-property').hidden = IShidden;
+    document.getElementById('property-list').hidden = !IShidden;
 
 }
 
@@ -438,7 +438,7 @@ async function uploadproperty()
 function cleanpropertyedit()
 {
     const propertydelete = document.getElementById("property-edit-property").querySelectorAll("input, select, textarea");
-    const roomstodelete = document.getElementById("property-List-room").replaceChildren();
+    //const roomstodelete = document.getElementById("property-List-room").replaceChildren();
 
     propertydelete.forEach(element => {
         element.value = null;
